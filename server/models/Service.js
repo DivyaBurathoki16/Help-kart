@@ -1,0 +1,65 @@
+import mongoose from 'mongoose';
+
+const serviceSchema = mongoose.Schema(
+  {
+    provider: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Provider',
+      required: true,
+    },
+    title: {
+      type: String,
+      required: [true, 'Please add a service title'],
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: [true, 'Please add a service description'],
+      trim: true,
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: [true, 'Please add a price'],
+      min: 0,
+    },
+    duration: {
+      type: Number, // in minutes
+      required: true,
+    },
+    images: [
+      {
+        type: String, // URL or path to image
+      },
+    ],
+    primaryImage: {
+      type: String, // Primary image URL/path (first image by default)
+      default: '',
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
+    },
+    totalBookings: {
+      type: Number,
+      default: 0,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Service = mongoose.model('Service', serviceSchema);
+
+export default Service;
