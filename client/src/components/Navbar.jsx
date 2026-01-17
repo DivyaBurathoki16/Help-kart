@@ -114,6 +114,7 @@ const Navbar = () => {
                       <Link to="/provider/dashboard" className={navLinkClass('/provider/dashboard')}>Dashboard</Link>
                       <Link to="/provider/services" className={navLinkClass('/provider/services')}>My Services</Link>
                       <Link to="/provider/bookings" className={navLinkClass('/provider/bookings')}>Bookings</Link>
+                      <Link to="/provider/profile" className={navLinkClass('/provider/profile')}>Profile</Link>
                     </>
                   )}
                   {user.role === 'admin' && (
@@ -479,6 +480,20 @@ const Navbar = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
                       <span>Bookings</span>
+                    </Link>
+                    <Link
+                      to="/provider/profile"
+                  className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
+                    location.pathname === '/provider/profile'
+                      ? 'bg-blue-50 text-blue-600 shadow-sm dark:bg-blue-900/30 dark:text-blue-400'
+                      : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 dark:text-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800'
+                  }`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <span>Profile</span>
                     </Link>
                   </>
                 )}

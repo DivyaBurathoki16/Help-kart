@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/ui/Card';
 import PrimaryButton from '../components/ui/PrimaryButton';
+import LocationPicker from '../components/LocationPicker';
 
 const Booking = () => {
   const { id } = useParams();
@@ -283,6 +284,17 @@ const Booking = () => {
             </div>
           </div>
         </Card>
+
+        {/* Service Location */}
+        {service.location && (
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Service Location</h2>
+            <LocationPicker
+              initialLocation={service.location}
+              readOnly={true}
+            />
+          </Card>
+        )}
 
         {/* Provider's Schedule */}
         <Card className="p-6 mb-8">

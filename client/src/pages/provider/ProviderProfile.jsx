@@ -102,52 +102,52 @@ const ProviderProfile = () => {
 
   if (fetching) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 py-8 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading profile...</p>
+          <p className="mt-4 text-slate-600 dark:text-neutral-300">Loading profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 py-8 transition-colors duration-300">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <button
             onClick={() => navigate('/provider/dashboard')}
-            className="text-blue-600 hover:text-blue-800 mb-4"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mb-4 transition-colors"
           >
             ← Back to Dashboard
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-          <p className="mt-2 text-gray-600">Manage your provider profile information</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-neutral-100">My Profile</h1>
+          <p className="mt-2 text-slate-600 dark:text-neutral-300">Manage your provider profile information</p>
         </div>
 
         {/* Profile Stats */}
         {provider && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md dark:shadow-neutral-950/50 p-6 mb-6 transition-colors duration-300">
             <div className="grid md:grid-cols-3 gap-4">
               <div>
-                <p className="text-sm text-gray-600">Rating</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm text-slate-600 dark:text-neutral-300">Rating</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-neutral-100">
                   {provider.rating?.toFixed(1) || '0.0'} ⭐
                 </p>
-                <p className="text-xs text-gray-500">{provider.totalReviews || 0} reviews</p>
+                <p className="text-xs text-slate-500 dark:text-neutral-400">{provider.totalReviews || 0} reviews</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Experience</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm text-slate-600 dark:text-neutral-300">Experience</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-neutral-100">
                   {provider.yearsOfExperience || 0} {provider.yearsOfExperience === 1 ? 'year' : 'years'}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Status</p>
+                <p className="text-sm text-slate-600 dark:text-neutral-300">Status</p>
                 <p className="text-2xl font-bold">
                   <span
                     className={`${
-                      provider.isApproved ? 'text-green-600' : 'text-yellow-600'
+                      provider.isApproved ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'
                     }`}
                   >
                     {provider.isApproved ? '✓ Approved' : '⏳ Pending'}
@@ -158,11 +158,11 @@ const ProviderProfile = () => {
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md dark:shadow-neutral-950/50 p-6 transition-colors duration-300">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Business Name */}
             <div>
-              <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="businessName" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
                 Business Name *
               </label>
               <input
@@ -172,14 +172,14 @@ const ProviderProfile = () => {
                 required
                 value={formData.businessName}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 placeholder="e.g., ABC Painting Services"
               />
             </div>
 
             {/* Description */}
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
                 Business Description
               </label>
               <textarea
@@ -188,14 +188,14 @@ const ProviderProfile = () => {
                 rows={4}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 placeholder="Tell customers about your business..."
               />
             </div>
 
             {/* Phone */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="phone" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
                 Phone Number *
               </label>
               <input
@@ -205,21 +205,21 @@ const ProviderProfile = () => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 placeholder="+1 (555) 123-4567"
               />
             </div>
 
             {/* Address */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Business Address</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">Business Address</label>
               <div className="space-y-3">
                 <input
                   type="text"
                   name="address.street"
                   value={formData.address.street}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   placeholder="Street Address"
                 />
                 <div className="grid md:grid-cols-2 gap-3">
@@ -228,7 +228,7 @@ const ProviderProfile = () => {
                     name="address.city"
                     value={formData.address.city}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="City"
                   />
                   <input
@@ -236,7 +236,7 @@ const ProviderProfile = () => {
                     name="address.state"
                     value={formData.address.state}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="State"
                   />
                 </div>
@@ -246,7 +246,7 @@ const ProviderProfile = () => {
                     name="address.zipCode"
                     value={formData.address.zipCode}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="ZIP Code"
                   />
                   <input
@@ -254,7 +254,7 @@ const ProviderProfile = () => {
                     name="address.country"
                     value={formData.address.country}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="Country"
                   />
                 </div>
@@ -264,7 +264,7 @@ const ProviderProfile = () => {
             {/* Years of Experience & License */}
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="yearsOfExperience" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="yearsOfExperience" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
                   Years of Experience
                 </label>
                 <input
@@ -274,12 +274,12 @@ const ProviderProfile = () => {
                   min="0"
                   value={formData.yearsOfExperience}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 />
               </div>
 
               <div>
-                <label htmlFor="licenseNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="licenseNumber" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
                   License Number (Optional)
                 </label>
                 <input
@@ -288,7 +288,7 @@ const ProviderProfile = () => {
                   name="licenseNumber"
                   value={formData.licenseNumber}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   placeholder="License #"
                 />
               </div>
@@ -299,7 +299,7 @@ const ProviderProfile = () => {
               <button
                 type="button"
                 onClick={() => navigate('/provider/dashboard')}
-                className="flex-1 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                className="flex-1 px-6 py-3 border border-slate-300 dark:border-neutral-700 rounded-lg text-slate-700 dark:text-neutral-300 font-medium hover:bg-slate-50 dark:hover:bg-neutral-800 transition-colors"
               >
                 Cancel
               </button>

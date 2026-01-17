@@ -31,7 +31,7 @@ router.post('/', protect, authorize('provider'), async (req, res) => {
     // Get or create provider profile
     const provider = await getOrCreateProvider(req.user._id);
 
-    const { title, description, category, price, duration, images } = req.body;
+    const { title, description, category, price, duration, images, location } = req.body;
 
     // Validation
     if (!title || !description || !category || !price || !duration) {
@@ -45,7 +45,7 @@ router.post('/', protect, authorize('provider'), async (req, res) => {
     }
 
     // Create service
-    const service = await Service.create({
+    const serviceData = {
       provider: provider._id,
       title,
       description,
@@ -55,7 +55,14 @@ router.post('/', protect, authorize('provider'), async (req, res) => {
       images: images || [],
       primaryImage: images && images.length > 0 ? images[0] : '',
       isActive: true,
-    });
+    };
+
+    // Add location if provided
+    if (location) {
+      serviceData.location = location;
+    }
+
+    const service = await Service.create(serviceData);
 
     const populatedService = await Service.findById(service._id)
       .populate('provider', 'businessName rating totalReviews')

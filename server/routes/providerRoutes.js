@@ -677,7 +677,7 @@ router.patch('/services/:id', protect, authorize('provider'), async (req, res) =
     }
 
     // Update service
-    const { title, description, category, price, duration, images, primaryImage, isActive } = req.body;
+    const { title, description, category, price, duration, images, primaryImage, isActive, location } = req.body;
 
     if (title) service.title = title;
     if (description) service.description = description;
@@ -691,6 +691,7 @@ router.patch('/services/:id', protect, authorize('provider'), async (req, res) =
     }
     if (primaryImage !== undefined) service.primaryImage = primaryImage;
     if (isActive !== undefined) service.isActive = isActive;
+    if (location !== undefined) service.location = location;
 
     await service.save();
 

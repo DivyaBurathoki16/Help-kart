@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/ui/Card';
 import PrimaryButton from '../components/ui/PrimaryButton';
+import LocationPicker from '../components/LocationPicker';
 
 // Import static services
 const STATIC_SERVICES = [
@@ -82,10 +83,17 @@ const ServiceDetails = () => {
   };
 
   const handleBook = () => {
-    // Always redirect to login for booking
-    navigate('/login', {
-      state: { from: `/services/${id}` }
-    });
+    if (!user) {
+      navigate('/login', {
+        state: { from: `/services/${id}` }
+      });
+    } else if (user.role === 'customer') {
+      navigate(`/book/${id}`);
+    } else {
+      navigate('/login', {
+        state: { from: `/services/${id}` }
+      });
+    }
   };
 
   if (loading) {
@@ -112,76 +120,265 @@ const ServiceDetails = () => {
     );
   }
 
+  const rating = service.rating || service.provider?.rating || 0;
+  const reviewCount = service.reviewCount || service.provider?.totalReviews || 0;
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 py-12 animate-fade-in transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300 pb-20 md:pb-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <button
           onClick={() => navigate(-1)}
-          className="mb-8 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium flex items-center gap-2 group transition-all duration-300"
+          className="mb-6 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium flex items-center gap-2 group transition-all duration-300"
         >
           <span className="group-hover:-translate-x-1 transition-transform">←</span> Back
         </button>
 
-        <Card className="overflow-hidden">
-          <div className="md:flex">
-            <div className="md:w-1/2 relative bg-slate-100 dark:bg-neutral-800 min-h-[384px] md:min-h-[500px] flex items-center justify-center overflow-hidden transition-colors duration-300">
-              {service.images && service.images.length > 0 && !imageError ? (
+        {/* Desktop Layout: 40/60 split with sticky image */}
+        <div className="hidden md:flex gap-8 relative">
+          {/* Left Column: Sticky Image (40%) */}
+          <div className="w-[40%] flex-shrink-0">
+            <div className="sticky top-8">
+              <div className="relative rounded-2xl overflow-hidden bg-slate-100 dark:bg-neutral-800 shadow-lg" style={{ maxHeight: '500px' }}>
+                {service.images && service.images.length > 0 && !imageError ? (
+                  <>
+                    <img
+                      src={getImageUrl(service.images[0])}
+                      alt={service.title}
+                      className="w-full h-full object-cover"
+                      style={{ maxHeight: '500px' }}
+                      onError={() => {
+                        setImageError(true);
+                      }}
+                    />
+                    {/* Rating Badge Overlay */}
+                    {rating > 0 && (
+                      <div className="absolute top-4 right-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg border border-slate-200/50 dark:border-neutral-700/50">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-5 h-5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                          </svg>
+                          <div>
+                            <div className="text-lg font-bold text-slate-900 dark:text-neutral-100">{rating.toFixed(1)}</div>
+                            <div className="text-xs text-slate-500 dark:text-neutral-400">{reviewCount} {reviewCount === 1 ? 'review' : 'reviews'}</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="w-full h-[500px] bg-slate-200 dark:bg-neutral-700 flex items-center justify-center transition-colors duration-300">
+                    <span className="text-slate-400 dark:text-neutral-500">No Image Available</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Scrollable Content (60%) */}
+          <div className="w-[60%] flex-shrink-0 space-y-6">
+            {/* Service Title and Category */}
+            <div>
+              <h1 className="text-4xl font-extrabold text-slate-900 dark:text-neutral-100 mb-4 tracking-tight">
+                {service.title}
+              </h1>
+              {service.category && (
+                <span className="inline-block px-4 py-1.5 bg-blue-500/15 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 rounded-full text-sm font-medium">
+                  {service.category.name}
+                </span>
+              )}
+            </div>
+
+            {/* Pricing */}
+            <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 dark:text-neutral-300 font-medium text-lg">Price</span>
+                <span className="text-4xl font-extrabold text-blue-600 dark:text-blue-400">${service.price}</span>
+              </div>
+              <div className="mt-4 flex justify-between items-center">
+                <span className="text-slate-600 dark:text-neutral-300 font-medium">Duration</span>
+                <span className="font-semibold text-slate-900 dark:text-neutral-100">{service.duration} minutes</span>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Description</h2>
+              <p className="text-slate-600 dark:text-neutral-300 leading-relaxed">{service.description}</p>
+            </div>
+
+            {/* Provider Card */}
+            {service.provider && (
+              <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Service Provider</h2>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                    {service.provider.businessName?.[0]?.toUpperCase() || 'P'}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-lg font-semibold text-slate-900 dark:text-neutral-100 mb-1">{service.provider.businessName}</p>
+                    {service.provider.rating > 0 && (
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center">
+                          <svg className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                          </svg>
+                          <span className="ml-1 text-sm font-semibold text-slate-900 dark:text-neutral-100">
+                            {service.provider.rating.toFixed(1)}
+                          </span>
+                        </div>
+                        <span className="text-xs text-slate-500 dark:text-neutral-400">
+                          ({service.provider.totalReviews} {service.provider.totalReviews === 1 ? 'review' : 'reviews'})
+                        </span>
+                      </div>
+                    )}
+                    {service.provider.description && (
+                      <p className="text-sm text-slate-600 dark:text-neutral-300 mt-2">{service.provider.description}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Location with Map */}
+            {service.location && (
+              <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Service Location</h2>
+                <LocationPicker
+                  initialLocation={service.location}
+                  readOnly={true}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Layout: Stacked vertically */}
+        <div className="md:hidden space-y-6">
+          {/* Image with Rating Badge */}
+          <div className="relative rounded-2xl overflow-hidden bg-slate-100 dark:bg-neutral-800 shadow-lg">
+            {service.images && service.images.length > 0 && !imageError ? (
+              <>
                 <img
                   src={getImageUrl(service.images[0])}
                   alt={service.title}
-                  className="w-full h-full min-h-[384px] md:min-h-[500px] object-cover"
+                  className="w-full h-80 object-cover"
                   onError={() => {
                     setImageError(true);
                   }}
                 />
-              ) : (
-                <div className="w-full h-96 md:h-[500px] bg-slate-200 dark:bg-neutral-700 flex items-center justify-center transition-colors duration-300">
-                  <span className="text-slate-400 dark:text-neutral-500">No Image Available</span>
-                </div>
-              )}
-            </div>
-            <div className="md:w-1/2 p-8 md:p-10">
-              <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-neutral-100 mb-4 tracking-tight transition-colors duration-300">{service.title}</h1>
-              
+                {/* Rating Badge Overlay */}
+                {rating > 0 && (
+                  <div className="absolute top-4 right-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg border border-slate-200/50 dark:border-neutral-700/50">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                      </svg>
+                      <div>
+                        <div className="text-lg font-bold text-slate-900 dark:text-neutral-100">{rating.toFixed(1)}</div>
+                        <div className="text-xs text-slate-500 dark:text-neutral-400">{reviewCount} {reviewCount === 1 ? 'review' : 'reviews'}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="w-full h-80 bg-slate-200 dark:bg-neutral-700 flex items-center justify-center transition-colors duration-300">
+                <span className="text-slate-400 dark:text-neutral-500">No Image Available</span>
+              </div>
+            )}
+          </div>
+
+          {/* Content */}
+          <div className="space-y-6">
+            {/* Service Title and Category */}
+            <div>
+              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-neutral-100 mb-4 tracking-tight">
+                {service.title}
+              </h1>
               {service.category && (
-                <span className="inline-block px-4 py-1.5 bg-blue-500/15 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 rounded-full text-sm font-medium mb-6 transition-colors duration-300">
+                <span className="inline-block px-4 py-1.5 bg-blue-500/15 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 rounded-full text-sm font-medium">
                   {service.category.name}
                 </span>
               )}
+            </div>
 
-              <div className="mb-8">
-                <p className="text-slate-600 dark:text-neutral-300 mb-6 leading-relaxed text-base transition-colors duration-300">{service.description}</p>
-                
-                <div className="space-y-4 mb-8 p-6 bg-slate-50 dark:bg-neutral-800/50 rounded-xl border border-slate-200 dark:border-neutral-700 transition-colors duration-300">
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-neutral-300 font-medium">Price:</span>
-                    <span className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">${service.price}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-neutral-300 font-medium">Duration:</span>
-                    <span className="font-semibold text-slate-900 dark:text-neutral-100">{service.duration} minutes</span>
-                  </div>
-                </div>
+            {/* Pricing */}
+            <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 dark:text-neutral-300 font-medium text-lg">Price</span>
+                <span className="text-4xl font-extrabold text-blue-600 dark:text-blue-400">${service.price}</span>
+              </div>
+              <div className="mt-4 flex justify-between items-center">
+                <span className="text-slate-600 dark:text-neutral-300 font-medium">Duration</span>
+                <span className="font-semibold text-slate-900 dark:text-neutral-100">{service.duration} minutes</span>
+              </div>
+            </div>
 
-                {service.provider && (
-                  <div className="border-t border-slate-200 dark:border-neutral-700 pt-6 mb-8 transition-colors duration-300">
-                    <h3 className="font-bold text-slate-900 dark:text-neutral-100 mb-3">Service Provider</h3>
-                    <p className="text-slate-700 dark:text-neutral-300 font-medium mb-2">{service.provider.businessName}</p>
+            {/* Description */}
+            <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Description</h2>
+              <p className="text-slate-600 dark:text-neutral-300 leading-relaxed">{service.description}</p>
+            </div>
+
+            {/* Provider Card */}
+            {service.provider && (
+              <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Service Provider</h2>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                    {service.provider.businessName?.[0]?.toUpperCase() || 'P'}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-lg font-semibold text-slate-900 dark:text-neutral-100 mb-1">{service.provider.businessName}</p>
                     {service.provider.rating > 0 && (
-                      <p className="text-sm text-slate-600 dark:text-neutral-400 flex items-center gap-1">
-                        <span className="text-amber-400">⭐</span> {service.provider.rating.toFixed(1)} ({service.provider.totalReviews} reviews)
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center">
+                          <svg className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                          </svg>
+                          <span className="ml-1 text-sm font-semibold text-slate-900 dark:text-neutral-100">
+                            {service.provider.rating.toFixed(1)}
+                          </span>
+                        </div>
+                        <span className="text-xs text-slate-500 dark:text-neutral-400">
+                          ({service.provider.totalReviews} {service.provider.totalReviews === 1 ? 'review' : 'reviews'})
+                        </span>
+                      </div>
+                    )}
+                    {service.provider.description && (
+                      <p className="text-sm text-slate-600 dark:text-neutral-300 mt-2">{service.provider.description}</p>
                     )}
                   </div>
-                )}
+                </div>
               </div>
+            )}
 
-              <PrimaryButton onClick={handleBook} className="w-full" icon="→" iconPosition="right">
-                Book This Service
-              </PrimaryButton>
-            </div>
+            {/* Location with Map */}
+            {service.location && (
+              <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Service Location</h2>
+                <LocationPicker
+                  initialLocation={service.location}
+                  readOnly={true}
+                />
+              </div>
+            )}
           </div>
-        </Card>
+        </div>
+      </div>
+
+      {/* Fixed Bottom CTA Button (Mobile & Desktop) */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-neutral-700 shadow-lg z-50 p-4 md:p-6">
+        <div className="max-w-7xl mx-auto">
+          <PrimaryButton 
+            onClick={handleBook} 
+            className="w-full text-lg py-4" 
+            icon="→" 
+            iconPosition="right"
+          >
+            Book This Service
+          </PrimaryButton>
+        </div>
       </div>
     </div>
   );
