@@ -5,6 +5,8 @@ import Card from '../../components/ui/Card';
 import StatusBadge from '../../components/ui/StatusBadge';
 import PrimaryButton from '../../components/ui/PrimaryButton';
 import AdminMessages from '../../components/Admin/AdminMessages';
+import { getApiUrl } from '../../config/api';
+import API_URL from '../../config/api';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -36,7 +38,7 @@ const AdminDashboard = () => {
   const fetchIssues = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/admin/issues');
+      const response = await axios.get(getApiUrl('api/admin/issues'));
       setIssues(response.data.issues || []);
     } catch (error) {
       console.error('Error fetching issues:', error);
@@ -48,7 +50,7 @@ const AdminDashboard = () => {
 
   const fetchBehaviorReports = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/behavior-reports');
+      const response = await axios.get(getApiUrl('api/behavior-reports'));
       setBehaviorReports(response.data.reports || []);
     } catch (error) {
       console.error('Error fetching behavior reports:', error);
@@ -68,7 +70,7 @@ const AdminDashboard = () => {
 
     try {
       setReviewing(true);
-      await axios.patch(`http://localhost:5000/api/behavior-reports/${reviewModal._id}/review`, {
+      await axios.patch(getApiUrl(`api/behavior-reports/${reviewModal._id}/review`), {
         actionTaken: reviewAction,
         adminNotes: reviewNotes.trim(),
       });
@@ -101,7 +103,7 @@ const AdminDashboard = () => {
     try {
       setResolving(true);
       const response = await axios.patch(
-        `http://localhost:5000/api/admin/issues/${resolveModal._id}/resolve`,
+        getApiUrl(`api/admin/issues/${resolveModal._id}/resolve`),
         {
           decision: resolution,
           refundAmount: resolution === 'partial_refund' ? parseFloat(refundAmount) : undefined,
@@ -414,10 +416,10 @@ const AdminDashboard = () => {
                               {issue.proofOfWork.map((image, index) => (
                                 <img
                                   key={index}
-                                  src={`http://localhost:5000${image}`}
+                                  src={`${API_URL}${image}`}
                                   alt={`Proof ${index + 1}`}
                                   className="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-neutral-700 cursor-pointer hover:opacity-75"
-                                  onClick={() => window.open(`http://localhost:5000${image}`, '_blank')}
+                                  onClick={() => window.open(`${API_URL}${image}`, '_blank')}
                                 />
                               ))}
                             </div>
@@ -434,10 +436,10 @@ const AdminDashboard = () => {
                               {issue.customerProof.map((image, index) => (
                                 <img
                                   key={index}
-                                  src={`http://localhost:5000${image}`}
+                                  src={`${API_URL}${image}`}
                                   alt={`Evidence ${index + 1}`}
                                   className="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-neutral-700 cursor-pointer hover:opacity-75"
-                                  onClick={() => window.open(`http://localhost:5000${image}`, '_blank')}
+                                  onClick={() => window.open(`${API_URL}${image}`, '_blank')}
                                 />
                               ))}
                             </div>
@@ -628,7 +630,7 @@ const AdminDashboard = () => {
                   {resolveModal.proofOfWork && resolveModal.proofOfWork.length > 0 ? (
                     <div className="grid grid-cols-2 gap-2">
                       {resolveModal.proofOfWork.map((img, i) => (
-                        <img key={i} src={`http://localhost:5000${img}`} alt="Proof" className="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-neutral-700 cursor-pointer hover:opacity-90" onClick={() => window.open(`http://localhost:5000${img}`, '_blank')} />
+                        <img key={i} src={`${API_URL}${img}`} alt="Proof" className="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-neutral-700 cursor-pointer hover:opacity-90" onClick={() => window.open(`${API_URL}${img}`, '_blank')} />
                       ))}
                     </div>
                   ) : (
@@ -644,7 +646,7 @@ const AdminDashboard = () => {
                   {resolveModal.customerProof && resolveModal.customerProof.length > 0 ? (
                     <div className="grid grid-cols-2 gap-2">
                       {resolveModal.customerProof.map((img, i) => (
-                        <img key={i} src={`http://localhost:5000${img}`} alt="Evidence" className="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-neutral-700 cursor-pointer hover:opacity-90" onClick={() => window.open(`http://localhost:5000${img}`, '_blank')} />
+                        <img key={i} src={`${API_URL}${img}`} alt="Evidence" className="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-neutral-700 cursor-pointer hover:opacity-90" onClick={() => window.open(`${API_URL}${img}`, '_blank')} />
                       ))}
                     </div>
                   ) : (

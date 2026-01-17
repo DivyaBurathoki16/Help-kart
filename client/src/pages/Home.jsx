@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { getApiUrl } from '../config/api';
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
@@ -15,7 +16,7 @@ const Home = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/services/categories/list');
+      const response = await axios.get(getApiUrl('api/services/categories/list'));
       setCategories(response.data.categories || []);
     } catch (error) {
       console.error('Error fetching categories:', error);

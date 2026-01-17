@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Card from '../components/ui/Card';
 import PrimaryButton from '../components/ui/PrimaryButton';
+import { getApiUrl } from '../config/api';
 
 const Payment = () => {
   const { bookingId } = useParams();
@@ -18,7 +19,7 @@ const Payment = () => {
   const fetchBookingDetails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/bookings/my`);
+      const response = await axios.get(getApiUrl('api/bookings/my'));
       const bookings = response.data.bookings || [];
       const currentBooking = bookings.find(b => b._id === bookingId);
       
@@ -61,7 +62,7 @@ const Payment = () => {
       
       // TODO: In production, this would be called by payment gateway callback/webhook
       // For testing, we're simulating a successful payment
-      const response = await axios.post('http://localhost:5000/api/payments/verify', {
+      const response = await axios.post(getApiUrl('api/payments/verify'), {
         bookingId: booking._id,
         paymentId: `test_payment_${Date.now()}`, // Fake payment ID for testing
         paymentStatus: 'paid',

@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { getApiUrl } from '../config/api';
 
 const AuthContext = createContext();
 
@@ -18,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/auth/me');
+      const response = await axios.get(getApiUrl('api/auth/me'));
       setUser(response.data.user);
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post(getApiUrl('api/auth/login'), {
         email,
         password,
       });
@@ -74,7 +75,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyOTP = async (email, otp) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/verify-otp', {
+      const response = await axios.post(getApiUrl('api/auth/verify-otp'), {
         email,
         otp,
       });
@@ -98,7 +99,7 @@ export const AuthProvider = ({ children }) => {
 
   const forgotPassword = async (email) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/forgot-password', {
+      const response = await axios.post(getApiUrl('api/auth/forgot-password'), {
         email,
       });
       return {
@@ -115,7 +116,7 @@ export const AuthProvider = ({ children }) => {
 
   const resetPassword = async (email, otp, newPassword) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/reset-password', {
+      const response = await axios.post(getApiUrl('api/auth/reset-password'), {
         email,
         otp,
         newPassword,
@@ -138,7 +139,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', userData);
+      const response = await axios.post(getApiUrl('api/auth/register'), userData);
       const { token: newToken, user: newUser } = response.data;
       localStorage.setItem('token', newToken);
       setToken(newToken);

@@ -4,6 +4,8 @@ import axios from 'axios';
 import Card from '../components/ui/Card';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import PageHeader from '../components/PageHeader';
+import { getApiUrl } from '../config/api';
+import API_URL from '../config/api';
 
 // Sample locations for random assignment
 const AREAS = ['Downtown', 'Midtown', 'Uptown', 'Westside', 'Eastside', 'North Park', 'South Bay', 'Central District', 'Riverside', 'Hillcrest', 'Oakwood', 'Maple Heights', 'Green Valley', 'Sunset Hills', 'Ocean View'];
@@ -84,7 +86,7 @@ const Services = () => {
       if (filters.search) params.search = filters.search;
       if (filters.category) params.category = filters.category;
 
-      const response = await axios.get('http://localhost:5000/api/services', { params });
+      const response = await axios.get(getApiUrl('api/services'), { params });
       // Always merge with static services
       const backendServices = response.data.services || [];
       setServices([...STATIC_SERVICES, ...backendServices]);
@@ -99,7 +101,7 @@ const Services = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/services/categories/list');
+      const response = await axios.get(getApiUrl('api/services/categories/list'));
       setCategories(response.data.categories || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -121,7 +123,7 @@ const Services = () => {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
     if (imagePath.startsWith('http')) return imagePath;
-    if (imagePath.startsWith('/')) return `http://localhost:5000${imagePath}`;
+    if (imagePath.startsWith('/')) return `${API_URL}${imagePath}`;
     return imagePath;
   };
 

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getApiUrl } from '../../config/api';
+import API_URL from '../../config/api';
 
 const MyServices = () => {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const MyServices = () => {
   const fetchServices = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/provider/services');
+      const response = await axios.get(getApiUrl('api/provider/services'));
       setServices(response.data.services || []);
     } catch (error) {
       console.error('Error fetching services:', error);
@@ -29,7 +31,7 @@ const MyServices = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/provider/services/${serviceId}`);
+      await axios.delete(getApiUrl(`api/provider/services/${serviceId}`));
       fetchServices(); // Refresh the list
     } catch (error) {
       alert(error.response?.data?.message || 'Failed to delete service');
@@ -38,7 +40,7 @@ const MyServices = () => {
 
   const toggleServiceStatus = async (serviceId, currentStatus) => {
     try {
-      await axios.patch(`http://localhost:5000/api/provider/services/${serviceId}`, {
+      await axios.patch(getApiUrl(`api/provider/services/${serviceId}`), {
         isActive: !currentStatus,
       });
       fetchServices(); // Refresh the list
@@ -51,7 +53,7 @@ const MyServices = () => {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
     if (imagePath.startsWith('http')) return imagePath;
-    if (imagePath.startsWith('/')) return `http://localhost:5000${imagePath}`;
+    if (imagePath.startsWith('/')) return `${API_URL}${imagePath}`;
     return imagePath;
   };
 

@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import Card from '../components/ui/Card';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import LocationPicker from '../components/LocationPicker';
+import { getApiUrl } from '../config/api';
+import API_URL from '../config/api';
 
 // Import static services
 const STATIC_SERVICES = [
@@ -64,7 +66,7 @@ const ServiceDetails = () => {
 
     // Try to fetch from backend
     try {
-      const response = await axios.get(`http://localhost:5000/api/services/${id}`);
+      const response = await axios.get(getApiUrl(`api/services/${id}`));
       setService(response.data.service);
     } catch (error) {
       console.error('Error fetching service:', error);
@@ -78,7 +80,7 @@ const ServiceDetails = () => {
     if (!imagePath) return '';
     if (imagePath.startsWith('http')) return imagePath;
     if (imagePath.startsWith('data:')) return imagePath; // Handle base64 images
-    if (imagePath.startsWith('/')) return `http://localhost:5000${imagePath}`;
+    if (imagePath.startsWith('/')) return `${API_URL}${imagePath}`;
     return imagePath;
   };
 

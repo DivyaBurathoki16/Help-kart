@@ -1,3 +1,5 @@
+import API_URL from '../config/api';
+
 export const getImageUrl = (path) => {
     if (!path) return '';
     if (path.startsWith('data:')) return path; // Base64
@@ -6,5 +8,5 @@ export const getImageUrl = (path) => {
     // Handle relative paths (legacy file storage)
     // Ensure we don't double slash
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    return `http://localhost:5000${cleanPath}`;
+    return `${API_URL}${cleanPath}`;
 };

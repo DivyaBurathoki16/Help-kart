@@ -5,6 +5,7 @@ import axios from 'axios';
 import StatCard from '../../components/ui/StatCard';
 import EmptyState from '../../components/ui/EmptyState';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import { getApiUrl } from '../../config/api';
 
 const CustomerDashboard = () => {
   const { user } = useAuth();
@@ -25,7 +26,7 @@ const CustomerDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/bookings/my');
+      const response = await axios.get(getApiUrl('api/bookings/my'));
       const bookings = response.data.bookings || [];
 
       // Calculate stats

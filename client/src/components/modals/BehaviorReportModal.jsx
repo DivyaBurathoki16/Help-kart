@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import Card from '../ui/Card';
 import PrimaryButton from '../ui/PrimaryButton';
+import { getApiUrl } from '../../config/api';
 
 const BehaviorReportModal = ({ booking, onClose, onSuccess }) => {
     const [issueType, setIssueType] = useState('rude_behavior');
@@ -15,7 +16,7 @@ const BehaviorReportModal = ({ booking, onClose, onSuccess }) => {
         setError('');
 
         try {
-            await axios.post('http://localhost:5000/api/behavior-reports', {
+            await axios.post(getApiUrl('api/behavior-reports'), {
                 bookingId: booking._id,
                 issueType,
                 description,

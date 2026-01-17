@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { getApiUrl } from '../config/api';
+import API_URL from '../config/api';
 
 const ImageUpload = ({ images = [], onChange, maxImages = 10 }) => {
   const [uploading, setUploading] = useState(false);
@@ -27,7 +29,7 @@ const ImageUpload = ({ images = [], onChange, maxImages = 10 }) => {
         formData.append('images', file);
       });
 
-      const response = await axios.post('http://localhost:5000/api/upload/service-images', formData, {
+      const response = await axios.post(getApiUrl('api/upload/service-images'), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -146,7 +148,7 @@ const ImageUpload = ({ images = [], onChange, maxImages = 10 }) => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {previewImages.map((image, index) => {
             const imageUrl = image.startsWith('http') || image.startsWith('/')
-              ? image.startsWith('/') ? `http://localhost:5000${image}` : image
+              ? image.startsWith('/') ? `${API_URL}${image}` : image
               : image;
             
             return (

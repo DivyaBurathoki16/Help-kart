@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Card from '../ui/Card';
 import PrimaryButton from '../ui/PrimaryButton';
+import { getApiUrl } from '../../config/api';
 
 const AdminMessages = () => {
   const [messages, setMessages] = useState([]);
@@ -23,7 +24,7 @@ const AdminMessages = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/messages', {
+      const response = await axios.get(getApiUrl('api/admin/messages'), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,7 +59,7 @@ const AdminMessages = () => {
       setSendingReply(true);
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:5000/api/admin/messages/${replyModal._id}/reply`,
+        getApiUrl(`api/admin/messages/${replyModal._id}/reply`),
         {
           subject: replySubject,
           message: replyMessage,
@@ -94,7 +95,7 @@ const AdminMessages = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `http://localhost:5000/api/admin/messages/${deleteConfirm._id}`,
+        getApiUrl(`api/admin/messages/${deleteConfirm._id}`),
         {
           headers: {
             Authorization: `Bearer ${token}`,

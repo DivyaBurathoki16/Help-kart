@@ -6,6 +6,8 @@ import StatusBadge from '../../components/ui/StatusBadge';
 import PaymentStatusBadge from '../../components/ui/PaymentStatusBadge';
 import ServiceStatusBadge from '../../components/ui/ServiceStatusBadge';
 import PrimaryButton from '../../components/ui/PrimaryButton';
+import { getApiUrl } from '../../config/api';
+import API_URL from '../../config/api';
 
 const ProviderBookings = () => {
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ const ProviderBookings = () => {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/provider/bookings');
+      const response = await axios.get(getApiUrl('api/provider/bookings'));
       setBookings(response.data.bookings || []);
     } catch (error) {
       console.error('Error fetching bookings:', error);
@@ -64,7 +66,7 @@ const ProviderBookings = () => {
         formData.append('images', file);
       });
 
-      const response = await axios.post('http://localhost:5000/api/upload/issue-images', formData, {
+      const response = await axios.post(getApiUrl('api/upload/issue-images'), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -92,7 +94,7 @@ const ProviderBookings = () => {
 
     try {
       setResolving(true);
-      const response = await axios.patch(`http://localhost:5000/api/provider/bookings/${completeModal.bookingId}/complete`, {
+      const response = await axios.patch(getApiUrl(`api/provider/bookings/${completeModal.bookingId}/complete`), {
         proofOfWork: proofImages
       });
 
@@ -118,7 +120,7 @@ const ProviderBookings = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/provider/bookings/${id}`, { status });
+      const response = await axios.patch(getApiUrl(`api/provider/bookings/${id}`), { status });
 
       // Check if conflicts need resolution
       if (status === 'accepted' && response.data.requiresConflictResolution) {
@@ -153,7 +155,7 @@ const ProviderBookings = () => {
       const conflictIds = conflictModal.conflicts.map(c => c.id);
 
       const response = await axios.post(
-        `http://localhost:5000/api/provider/bookings/${conflictModal.bookingId}/resolve-conflicts`,
+        getApiUrl(`api/provider/bookings/${conflictModal.bookingId}/resolve-conflicts`),
         {
           action,
           conflictIds,
@@ -666,7 +668,7 @@ const ProviderBookings = () => {
                         {proofImages.map((img, index) => (
                           <div key={index} className="relative group aspect-square">
                             <img
-                              src={`http://localhost:5000${img}`}
+                              src={`${API_URL}${img}`}
                               alt={`Proof ${index + 1}`}
                               className="w-full h-full object-cover rounded-lg border border-slate-200 dark:border-neutral-600"
                             />

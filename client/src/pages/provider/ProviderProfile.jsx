@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import { getApiUrl } from '../../config/api';
 
 const ProviderProfile = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const ProviderProfile = () => {
   const fetchProviderProfile = async () => {
     try {
       setFetching(true);
-      const response = await axios.get('http://localhost:5000/api/provider/profile');
+      const response = await axios.get(getApiUrl('api/provider/profile'));
       const providerData = response.data.provider;
       setProvider(providerData);
       setFormData({
@@ -85,11 +86,11 @@ const ProviderProfile = () => {
     try {
       if (provider) {
         // Update existing profile
-        await axios.patch('http://localhost:5000/api/provider/profile', formData);
+        await axios.patch(getApiUrl('api/provider/profile'), formData);
         alert('Profile updated successfully!');
       } else {
         // Create new profile
-        await axios.post('http://localhost:5000/api/provider/profile', formData);
+        await axios.post(getApiUrl('api/provider/profile'), formData);
         alert('Profile created successfully!');
       }
       fetchProviderProfile();

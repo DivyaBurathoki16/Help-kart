@@ -7,6 +7,8 @@ import PaymentStatusBadge from '../../components/ui/PaymentStatusBadge';
 import ServiceStatusBadge from '../../components/ui/ServiceStatusBadge';
 import PrimaryButton from '../../components/ui/PrimaryButton';
 import BehaviorReportModal from '../../components/modals/BehaviorReportModal';
+import { getApiUrl } from '../../config/api';
+import API_URL from '../../config/api';
 
 const MyBookings = () => {
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ const MyBookings = () => {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/bookings/my');
+      const response = await axios.get(getApiUrl('api/bookings/my'));
       const bookings = response.data.bookings || [];
       // Debug: Log booking data to see what we're getting
       console.log('Bookings data:', bookings.map(b => ({
@@ -76,7 +78,7 @@ const MyBookings = () => {
 
     try {
       setProcessingPayment(true);
-      const response = await axios.put(`http://localhost:5000/api/bookings/${paymentModal.bookingId}/pay`, {
+      const response = await axios.put(getApiUrl(`api/bookings/${paymentModal.bookingId}/pay`), {
         paymentMethod: selectedPaymentMethod,
       });
 
@@ -133,7 +135,7 @@ const MyBookings = () => {
     try {
       setRescheduling(true);
       const response = await axios.patch(
-        `http://localhost:5000/api/bookings/${rescheduleModal.bookingId}/reschedule`,
+        getApiUrl(`api/bookings/${rescheduleModal.bookingId}/reschedule`),
         rescheduleData
       );
 
@@ -157,7 +159,7 @@ const MyBookings = () => {
     if (!window.confirm('Are you sure you want to cancel this booking?')) return;
 
     try {
-      await axios.patch(`http://localhost:5000/api/bookings/${bookingId}/cancel`, {
+      await axios.patch(getApiUrl(`api/bookings/${bookingId}/cancel`), {
         reason: 'Cancelled by customer',
       });
       await fetchBookings();
@@ -206,7 +208,7 @@ const MyBookings = () => {
         formData.append('images', file);
       });
 
-      const response = await axios.post('http://localhost:5000/api/upload/issue-images', formData, {
+      const response = await axios.post(getApiUrl('api/upload/issue-images'), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -246,7 +248,7 @@ const MyBookings = () => {
     try {
       setReportingIssue(true);
       const response = await axios.post(
-        `http://localhost:5000/api/bookings/${issueModal.bookingId}/report-issue`,
+        getApiUrl(`api/bookings/${issueModal.bookingId}/report-issue`),
         {
           issueType: issueData.issueType,
           issueDescription: issueData.issueDescription,
@@ -1009,7 +1011,7 @@ const MyBookings = () => {
                     {issueData.issueImages.map((image, index) => (
                       <div key={index} className="relative group">
                         <img
-                          src={`http://localhost:5000${image}`}
+                          src={`${API_URL}${image}`}
                           alt={`Issue ${index + 1}`}
                           className="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-neutral-600"
                         />

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getApiUrl } from '../../config/api';
 
 const CompletedJobs = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const CompletedJobs = () => {
   const fetchCompletedBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/provider/bookings');
+      const response = await axios.get(getApiUrl('api/provider/bookings'));
       const allBookings = response.data.bookings || [];
       // Filter only completed bookings
       setBookings(allBookings.filter((booking) => booking.status === 'completed'));

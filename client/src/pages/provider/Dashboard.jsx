@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import Card from '../../components/ui/Card';
+import { getApiUrl } from '../../config/api';
 
 const ProviderDashboard = () => {
   const { user } = useAuth();
@@ -36,8 +37,8 @@ const ProviderDashboard = () => {
   const fetchStats = async () => {
     try {
       const [servicesRes, bookingsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/provider/services'),
-        axios.get('http://localhost:5000/api/provider/bookings'),
+        axios.get(getApiUrl('api/provider/services')),
+        axios.get(getApiUrl('api/provider/bookings')),
       ]);
 
       const services = servicesRes.data.services || [];
@@ -76,7 +77,7 @@ const ProviderDashboard = () => {
 
   const fetchBehavioralData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/behavior-reports/my');
+      const response = await axios.get(getApiUrl('api/behavior-reports/my'));
       if (response.data.success) {
         setBehavioralState({
           reports: response.data.reports,

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import ImageUpload from '../../components/ImageUpload';
 import LocationPicker from '../../components/LocationPicker';
+import { getApiUrl } from '../../config/api';
 
 const EditService = () => {
   const navigate = useNavigate();
@@ -34,12 +35,12 @@ const EditService = () => {
   const fetchCategories = async () => {
     try {
       // Get provider ID to fetch their custom categories
-      const providerResponse = await axios.get('http://localhost:5000/api/provider/profile').catch(() => null);
+      const providerResponse = await axios.get(getApiUrl('api/provider/profile')).catch(() => null);
       const providerId = providerResponse?.data?.provider?._id;
       
       const url = providerId 
-        ? `http://localhost:5000/api/services/categories/list?providerId=${providerId}`
-        : 'http://localhost:5000/api/services/categories/list';
+        ? getApiUrl(`api/services/categories/list?providerId=${providerId}`)
+        : getApiUrl('api/services/categories/list');
       
       const response = await axios.get(url);
       setCategories(response.data.categories || []);
@@ -56,7 +57,7 @@ const EditService = () => {
 
     setCreatingCategory(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/provider/categories', {
+      const response = await axios.post(getApiUrl('api/provider/categories'), {
         name: newCategoryName.trim(),
       });
       
@@ -86,7 +87,7 @@ const EditService = () => {
   const fetchService = async () => {
     try {
       setFetching(true);
-      const response = await axios.get(`http://localhost:5000/api/services/${id}`);
+      const response = await axios.get(getApiUrl(`api/services/${id}`));
       const service = response.data.service;
       
       setFormData({
@@ -133,7 +134,7 @@ const EditService = () => {
         location: formData.location,
       };
 
-      await axios.patch(`http://localhost:5000/api/provider/services/${id}`, serviceData);
+      await axios.patch(getApiUrl(`api/provider/services/${id}`), serviceData);
       navigate('/provider/services');
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Failed to update service';

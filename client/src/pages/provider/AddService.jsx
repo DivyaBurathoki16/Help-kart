@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import ImageUpload from '../../components/ImageUpload';
 import LocationPicker from '../../components/LocationPicker';
+import { getApiUrl } from '../../config/api';
 
 const AddService = () => {
   const navigate = useNavigate();
@@ -30,12 +31,12 @@ const AddService = () => {
   const fetchCategories = async () => {
     try {
       // Get provider ID to fetch their custom categories
-      const providerResponse = await axios.get('http://localhost:5000/api/provider/profile').catch(() => null);
+      const providerResponse = await axios.get(getApiUrl('api/provider/profile')).catch(() => null);
       const providerId = providerResponse?.data?.provider?._id;
       
       const url = providerId 
-        ? `http://localhost:5000/api/services/categories/list?providerId=${providerId}`
-        : 'http://localhost:5000/api/services/categories/list';
+        ? getApiUrl(`api/services/categories/list?providerId=${providerId}`)
+        : getApiUrl('api/services/categories/list');
       
       const response = await axios.get(url);
       setCategories(response.data.categories || []);
@@ -52,7 +53,7 @@ const AddService = () => {
 
     setCreatingCategory(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/provider/categories', {
+      const response = await axios.post(getApiUrl('api/provider/categories'), {
         name: newCategoryName.trim(),
       });
       
@@ -102,7 +103,7 @@ const AddService = () => {
         location: formData.location,
       };
 
-      await axios.post('http://localhost:5000/api/services', serviceData);
+      await axios.post(getApiUrl('api/services'), serviceData);
       navigate('/provider/services');
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Failed to create service';

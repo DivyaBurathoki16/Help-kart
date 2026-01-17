@@ -5,6 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import PageHeader from '../components/PageHeader';
+import { getApiUrl } from '../config/api';
 
 // Fix for default marker icon in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -40,7 +41,7 @@ const Contact = () => {
     setShowToast(false);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/contact', formData);
+      const response = await axios.post(getApiUrl('api/contact'), formData);
       
       if (response.data.success) {
         setFormData({ name: '', email: '', subject: '', message: '' });

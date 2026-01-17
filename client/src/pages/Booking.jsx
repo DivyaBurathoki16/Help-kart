@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import Card from '../components/ui/Card';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import LocationPicker from '../components/LocationPicker';
+import { getApiUrl } from '../config/api';
 
 const Booking = () => {
   const { id } = useParams();
@@ -55,7 +56,7 @@ const Booking = () => {
   const fetchService = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/services/${id}`);
+      const response = await axios.get(getApiUrl(`api/services/${id}`));
       setService(response.data.service);
 
       // Fetch provider's schedule
@@ -73,7 +74,7 @@ const Booking = () => {
   const fetchProviderSchedule = async (providerId) => {
     try {
       setScheduleLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/bookings/provider/${providerId}/schedule`);
+      const response = await axios.get(getApiUrl(`api/bookings/provider/${providerId}/schedule`));
       setProviderSchedule(response.data.schedule || []);
     } catch (error) {
       console.error('Error fetching provider schedule:', error);
@@ -126,7 +127,7 @@ const Booking = () => {
         notes: formData.notes,
       };
 
-      await axios.post('http://localhost:5000/api/bookings', bookingData);
+      await axios.post(getApiUrl('api/bookings'), bookingData);
       navigate('/customer/bookings', { state: { success: true } });
     } catch (error) {
       alert(error.response?.data?.message || 'Failed to create booking');
