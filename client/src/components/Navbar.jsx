@@ -105,6 +105,7 @@ const Navbar = () => {
                   {user.role === 'customer' && (
                     <>
                       <Link to="/services" className={navLinkClass('/services')}>Services</Link>
+                      <Link to="/customer/near-me" className={navLinkClass('/customer/near-me')}>Near Me</Link>
                       <Link to="/customer/dashboard" className={navLinkClass('/customer/dashboard')}>Dashboard</Link>
                       <Link to="/customer/bookings" className={navLinkClass('/customer/bookings')}>My Bookings</Link>
                     </>
@@ -397,8 +398,8 @@ const Navbar = () => {
                       to="/services"
                       className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
                         location.pathname === '/services'
-                          ? 'bg-blue-50 text-blue-600 shadow-sm'
-                          : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/50'
+                          ? 'bg-blue-50 text-blue-600 shadow-sm dark:bg-blue-900/30 dark:text-blue-400'
+                          : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 dark:text-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800'
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -406,6 +407,21 @@ const Navbar = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                       <span>Services</span>
+                    </Link>
+                    <Link
+                      to="/customer/near-me"
+                      className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
+                        location.pathname === '/customer/near-me'
+                          ? 'bg-blue-50 text-blue-600 shadow-sm dark:bg-blue-900/30 dark:text-blue-400'
+                          : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 dark:text-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800'
+                      }`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span>Near Me</span>
                     </Link>
                     <Link
                       to="/customer/dashboard"

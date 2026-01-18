@@ -31,6 +31,31 @@ export const protect = async (req, res, next) => {
   }
 };
 
+// Optional protect - doesn't fail if no token (for public routes that can use user info if available)
+export const optionalProtect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    try {
+      token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await User.findById(decoded.userId).select('-password');
+      
+      if (req.user && (!req.user.isActive || req.user.isBlocked)) {
+        req.user = null; // Don't fail, just don't set user
+      }
+    } catch (error) {
+      // Don't fail, just continue without user
+      req.user = null;
+    }
+  }
+  
+  next();
+};
+
 // Role-based authorization
 export const authorize = (...roles) => {
   return (req, res, next) => {

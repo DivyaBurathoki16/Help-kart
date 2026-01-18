@@ -301,7 +301,7 @@ const Home = () => {
                     </p>
 
                     <div className="mt-auto flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-blue-600">${service.price}</span>
+                      <span className="text-2xl font-black text-blue-600">₹{service.price}</span>
                       <span className="text-sm text-slate-500 dark:text-neutral-400">starting</span>
                     </div>
                   </div>

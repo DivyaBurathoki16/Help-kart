@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import Card from '../components/ui/Card';
+import PasswordInput from '../components/ui/PasswordInput';
 
 const ResetPassword = () => {
   const [formData, setFormData] = useState({
@@ -210,15 +211,14 @@ const ResetPassword = () => {
                     <label htmlFor="newPassword" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
                       New Password
                     </label>
-                    <input
+                    <PasswordInput
                       id="newPassword"
                       name="newPassword"
-                      type="password"
-                      required
-                      className="appearance-none relative block w-full px-4 py-3 border border-slate-300 dark:border-neutral-600 dark:bg-neutral-700 placeholder-slate-400 dark:placeholder-slate-400 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-neutral-700 backdrop-blur-sm transition-all duration-300"
-                      placeholder="Enter new password"
                       value={formData.newPassword}
                       onChange={handleChange}
+                      placeholder="Enter new password"
+                      required
+                      className="appearance-none relative block w-full border border-slate-300 dark:border-neutral-600 dark:bg-neutral-700 placeholder-slate-400 dark:placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-neutral-700 backdrop-blur-sm"
                     />
                   </div>
 
@@ -226,15 +226,14 @@ const ResetPassword = () => {
                     <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
                       Confirm Password
                     </label>
-                    <input
+                    <PasswordInput
                       id="confirmPassword"
                       name="confirmPassword"
-                      type="password"
-                      required
-                      className="appearance-none relative block w-full px-4 py-3 border border-slate-300 dark:border-neutral-600 dark:bg-neutral-700 placeholder-slate-400 dark:placeholder-slate-400 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-neutral-700 backdrop-blur-sm transition-all duration-300"
-                      placeholder="Confirm new password"
                       value={formData.confirmPassword}
                       onChange={handleChange}
+                      placeholder="Confirm new password"
+                      required
+                      className="appearance-none relative block w-full border border-slate-300 dark:border-neutral-600 dark:bg-neutral-700 placeholder-slate-400 dark:placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-neutral-700 backdrop-blur-sm"
                     />
                   </div>
                 </>

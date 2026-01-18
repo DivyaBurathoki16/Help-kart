@@ -281,7 +281,7 @@ const Booking = () => {
             </div>
             <div className="text-right">
               <p className="text-sm text-slate-600 dark:text-neutral-400">Total Amount</p>
-              <p className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">${service.price}</p>
+              <p className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">₹{service.price}</p>
             </div>
           </div>
         </Card>

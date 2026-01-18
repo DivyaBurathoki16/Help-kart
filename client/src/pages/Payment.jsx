@@ -53,7 +53,7 @@ const Payment = () => {
   };
 
   const handleConfirmPayment = async () => {
-    if (!window.confirm(`Confirm payment of $${booking.totalAmount}?`)) {
+    if (!window.confirm(`Confirm payment of ₹${booking.totalAmount}?`)) {
       return;
     }
 
@@ -153,7 +153,7 @@ const Payment = () => {
           <div className="bg-blue-50 rounded-xl p-6 mb-6 border-2 border-blue-200">
             <div className="text-center">
               <p className="text-sm text-slate-600 mb-2">Total Amount</p>
-              <p className="text-4xl font-extrabold text-blue-600">${booking.totalAmount}</p>
+              <p className="text-4xl font-extrabold text-blue-600">₹{booking.totalAmount}</p>
             </div>
           </div>
 

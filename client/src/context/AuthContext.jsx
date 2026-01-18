@@ -142,6 +142,8 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(getApiUrl('api/auth/register'), userData);
       const { token: newToken, user: newUser } = response.data;
       localStorage.setItem('token', newToken);
+      // Set flag to show welcome message on next login
+      localStorage.setItem('showWelcomeMessage', JSON.stringify({ role: newUser.role, timestamp: Date.now() }));
       setToken(newToken);
       setUser(newUser);
       axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
@@ -180,6 +182,7 @@ export const AuthProvider = ({ children }) => {
     verifyOTP,
     forgotPassword,
     resetPassword,
+    fetchUser,
     isAuthenticated: !!user,
   };
 

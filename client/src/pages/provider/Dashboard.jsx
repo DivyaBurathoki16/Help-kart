@@ -267,7 +267,7 @@ const ProviderDashboard = () => {
                 <p className="text-slate-400 dark:text-neutral-400 text-sm mt-1">Monthly revenue trends and service volume</p>
               </div>
               <div className="text-right">
-                <p className="text-3xl font-black text-emerald-400">${stats.totalRevenue.toFixed(0)}</p>
+                <p className="text-3xl font-black text-emerald-400">₹{stats.totalRevenue.toFixed(0)}</p>
                 <p className="text-xs text-slate-500 dark:text-neutral-500 uppercase font-bold tracking-widest mt-1">Total Earned</p>
               </div>
             </div>
@@ -310,7 +310,7 @@ const ProviderDashboard = () => {
             </div>
             <div>
               <p className="text-white/70 text-sm font-medium">Avg. Per Job</p>
-              <h4 className="text-3xl font-black">${stats.completedJobs > 0 ? (stats.totalRevenue / stats.completedJobs).toFixed(1) : '0'}</h4>
+              <h4 className="text-3xl font-black">₹{stats.completedJobs > 0 ? (stats.totalRevenue / stats.completedJobs).toFixed(1) : '0'}</h4>
               <p className="text-[10px] text-indigo-200 mt-1 uppercase font-bold">Standard rate</p>
             </div>
           </Card>
@@ -331,7 +331,7 @@ const ProviderDashboard = () => {
           <Card className="p-6 bg-white dark:bg-neutral-800 dark:border-neutral-700 border-none shadow-xl flex items-center gap-6 group hover:bg-slate-50 dark:hover:bg-neutral-700 transition-colors text-right justify-end">
             <div>
               <p className="text-slate-500 dark:text-neutral-300 text-sm font-medium">Pending Release</p>
-              <h4 className="text-3xl font-black text-slate-900 dark:text-neutral-100">${(stats.unpaidBookings * (stats.totalRevenue / (stats.completedJobs || 1))).toFixed(0)}</h4>
+              <h4 className="text-3xl font-black text-slate-900 dark:text-neutral-100">₹{(stats.unpaidBookings * (stats.totalRevenue / (stats.completedJobs || 1))).toFixed(0)}</h4>
               <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1 uppercase font-bold">Locked in escrow</p>
             </div>
             <div className="p-4 bg-amber-50 dark:bg-amber-900/30 rounded-2xl group-hover:bg-amber-100 dark:group-hover:bg-amber-900/40 transition-colors order-first">

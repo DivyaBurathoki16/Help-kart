@@ -4,7 +4,7 @@ import User from '../models/User.js';
 import Provider from '../models/Provider.js';
 import generateToken from '../utils/generateToken.js';
 import { protect } from '../middleware/auth.js';
-import { sendOTPEmail } from '../utils/emailService.js';
+import { sendOTPEmail, sendWelcomeEmail } from '../utils/emailService.js';
 import {
   generateOTP,
   hashOTP,
@@ -62,6 +62,14 @@ router.post(
           businessName: name,
           phone: phone || '',
         });
+      }
+
+      // Send welcome email (don't block registration if email fails)
+      try {
+        await sendWelcomeEmail(email, name, role);
+      } catch (error) {
+        console.error('Error sending welcome email:', error);
+        // Continue with registration even if email fails
       }
 
       // Generate token
@@ -482,6 +490,32 @@ router.get('/me', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
     res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// @route   PATCH /api/auth/profile
+// @desc    Update user profile (including location for customers)
+// @access  Private
+router.patch('/profile', protect, async (req, res) => {
+  try {
+    const { name, phone, location } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Update allowed fields
+    if (name !== undefined) user.name = name;
+    if (phone !== undefined) user.phone = phone;
+    if (location !== undefined) user.location = location;
+
+    await user.save();
+
+    const updatedUser = await User.findById(req.user._id).select('-password');
+    res.json({ success: true, user: updatedUser, message: 'Profile updated successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

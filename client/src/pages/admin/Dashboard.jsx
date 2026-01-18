@@ -386,7 +386,7 @@ const AdminDashboard = () => {
                               </div>
                               <div>
                                 <span className="font-semibold text-slate-900 dark:text-neutral-100">Booking Amount:</span>{' '}
-                                <span className="text-blue-600 dark:text-blue-400 font-bold">${issue.totalAmount}</span>
+                                <span className="text-blue-600 dark:text-blue-400 font-bold">₹{issue.totalAmount}</span>
                               </div>
                               <div>
                                 <span className="font-semibold text-slate-900 dark:text-neutral-100">Issue Type:</span>{' '}
@@ -617,7 +617,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-600 dark:text-neutral-400">Total Amount:</span>
-                    <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400">${resolveModal.totalAmount}</span>
+                    <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400">₹{resolveModal.totalAmount}</span>
                   </div>
                 </div>
               </div>
@@ -711,7 +711,7 @@ const AdminDashboard = () => {
                             className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-neutral-800 text-slate-900 dark:text-neutral-100"
                             disabled={resolving}
                           />
-                          <p className="text-xs text-slate-500 dark:text-neutral-500 mt-1">Maximum: ${resolveModal.totalAmount}</p>
+                          <p className="text-xs text-slate-500 dark:text-neutral-500 mt-1">Maximum: ₹{resolveModal.totalAmount}</p>
                         </div>
                       )}
                     </div>
@@ -732,7 +732,7 @@ const AdminDashboard = () => {
                     />
                     <div className="flex-1">
                       <div className="font-semibold text-slate-900 dark:text-neutral-100 mb-1">💵 Full Refund</div>
-                      <div className="text-sm text-slate-600 dark:text-neutral-400">Refund the full booking amount (${resolveModal.totalAmount})</div>
+                      <div className="text-sm text-slate-600 dark:text-neutral-400">Refund the full booking amount (₹{resolveModal.totalAmount})</div>
                     </div>
                   </label>
                 </div>

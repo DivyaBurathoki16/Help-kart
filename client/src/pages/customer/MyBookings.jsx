@@ -70,7 +70,7 @@ const MyBookings = () => {
 
     // Show confirmation for online payments
     if (selectedPaymentMethod !== 'COD') {
-      const confirmMessage = `Confirm payment of $${paymentModal.booking?.totalAmount || 0} via ${selectedPaymentMethod === 'UPI' ? 'UPI' : 'Card'}?`;
+      const confirmMessage = `Confirm payment of ₹${paymentModal.booking?.totalAmount || 0} via ${selectedPaymentMethod === 'UPI' ? 'UPI' : 'Card'}?`;
       if (!window.confirm(confirmMessage)) {
         return;
       }
@@ -412,7 +412,7 @@ const MyBookings = () => {
                   {/* Price and Payment/Service Status */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="text-3xl font-extrabold text-blue-600">
-                      ${booking.totalAmount}
+                      ₹{booking.totalAmount}
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <div className="flex items-center gap-2">
@@ -740,7 +740,7 @@ const MyBookings = () => {
                     </div>
                     <div className="flex justify-between items-center pt-2 border-t border-slate-200 dark:border-neutral-600">
                       <span className="text-slate-600 dark:text-neutral-300">Total Amount:</span>
-                      <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">${paymentModal.booking.totalAmount}</span>
+                      <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">₹{paymentModal.booking.totalAmount}</span>
                     </div>
                   </div>
                 </div>

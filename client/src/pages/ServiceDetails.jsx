@@ -126,8 +126,8 @@ const ServiceDetails = () => {
   const reviewCount = service.reviewCount || service.provider?.totalReviews || 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300 pb-20 md:pb-0">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300 pb-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
         <button
           onClick={() => navigate(-1)}
           className="mb-6 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium flex items-center gap-2 group transition-all duration-300"
@@ -135,19 +135,18 @@ const ServiceDetails = () => {
           <span className="group-hover:-translate-x-1 transition-transform">←</span> Back
         </button>
 
-        {/* Desktop Layout: 40/60 split with sticky image */}
-        <div className="hidden md:flex gap-8 relative">
-          {/* Left Column: Sticky Image (40%) */}
-          <div className="w-[40%] flex-shrink-0">
-            <div className="sticky top-8">
-              <div className="relative rounded-2xl overflow-hidden bg-slate-100 dark:bg-neutral-800 shadow-lg" style={{ maxHeight: '500px' }}>
+        {/* Desktop/Tablet Layout: 40/60 split with sticky image and scrollable info */}
+        <div className="hidden md:flex md:gap-4 lg:gap-8 md:p-4 lg:p-6">
+          {/* Left Column: Image (sticky on desktop only, not tablet) */}
+          <div className="md:w-[50%] lg:w-[40%] flex-shrink-0">
+            <div className="lg:sticky lg:top-8 self-start">
+              <div className="relative aspect-square md:aspect-[3/4] lg:aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-neutral-800 shadow-lg" style={{ maxHeight: 'calc(100vh - 12rem)' }}>
                 {service.images && service.images.length > 0 && !imageError ? (
                   <>
                     <img
                       src={getImageUrl(service.images[0])}
                       alt={service.title}
                       className="w-full h-full object-cover"
-                      style={{ maxHeight: '500px' }}
                       onError={() => {
                         setImageError(true);
                       }}
@@ -168,7 +167,7 @@ const ServiceDetails = () => {
                     )}
                   </>
                 ) : (
-                  <div className="w-full h-[500px] bg-slate-200 dark:bg-neutral-700 flex items-center justify-center transition-colors duration-300">
+                  <div className="w-full h-full bg-slate-200 dark:bg-neutral-700 flex items-center justify-center transition-colors duration-300">
                     <span className="text-slate-400 dark:text-neutral-500">No Image Available</span>
                   </div>
                 )}
@@ -176,81 +175,111 @@ const ServiceDetails = () => {
             </div>
           </div>
 
-          {/* Right Column: Scrollable Content (60%) */}
-          <div className="w-[60%] flex-shrink-0 space-y-6">
-            {/* Service Title and Category */}
-            <div>
-              <h1 className="text-4xl font-extrabold text-slate-900 dark:text-neutral-100 mb-4 tracking-tight">
-                {service.title}
-              </h1>
-              {service.category && (
-                <span className="inline-block px-4 py-1.5 bg-blue-500/15 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 rounded-full text-sm font-medium">
-                  {service.category.name}
-                </span>
-              )}
-            </div>
+          {/* Right Column: Scrollable Content (50% on tablet, 60% on desktop) */}
+          <div className="flex-1 md:w-[50%] lg:w-auto md:px-0 space-y-5 lg:space-y-6 md:flex md:flex-col">
+            {/* Sticky wrapper - sizes naturally to content, max height when content is long */}
+            <div className="sticky top-8 md:h-full md:min-h-0">
+              {/* Content area - scrolls only if content exceeds viewport */}
+              <div className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-3 md:pr-6 -mr-3 md:-mr-6 space-y-5 lg:space-y-6 md:h-full md:min-h-0" style={{ scrollbarWidth: 'thin' }}>
+                {/* Service Title and Category */}
+                <div>
+                  {service.category && (
+                    <span className="inline-block px-3 md:px-4 py-1.5 bg-blue-500/15 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 rounded-full text-xs md:text-sm font-medium mb-3 lg:mb-4">
+                      {service.category.name}
+                    </span>
+                  )}
+                  <h1 className="text-2xl md:text-[2rem] lg:text-4xl font-extrabold text-slate-900 dark:text-neutral-100 mb-3 lg:mb-4 tracking-tight">
+                    {service.title}
+                  </h1>
+                </div>
 
-            {/* Pricing */}
-            <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
-              <div className="flex justify-between items-center">
-                <span className="text-slate-600 dark:text-neutral-300 font-medium text-lg">Price</span>
-                <span className="text-4xl font-extrabold text-blue-600 dark:text-blue-400">${service.price}</span>
-              </div>
-              <div className="mt-4 flex justify-between items-center">
-                <span className="text-slate-600 dark:text-neutral-300 font-medium">Duration</span>
-                <span className="font-semibold text-slate-900 dark:text-neutral-100">{service.duration} minutes</span>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Description</h2>
-              <p className="text-slate-600 dark:text-neutral-300 leading-relaxed">{service.description}</p>
-            </div>
-
-            {/* Provider Card */}
-            {service.provider && (
-              <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Service Provider</h2>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                    {service.provider.businessName?.[0]?.toUpperCase() || 'P'}
+                {/* Pricing */}
+                <div className="bg-white dark:bg-neutral-800 rounded-xl p-5 md:p-6 lg:p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-600 dark:text-neutral-300 font-medium text-base md:text-lg">Price</span>
+                    <span className="text-3xl md:text-4xl font-extrabold text-blue-600 dark:text-blue-400">₹{service.price}</span>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-lg font-semibold text-slate-900 dark:text-neutral-100 mb-1">{service.provider.businessName}</p>
-                    {service.provider.rating > 0 && (
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center">
-                          <svg className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                          </svg>
-                          <span className="ml-1 text-sm font-semibold text-slate-900 dark:text-neutral-100">
-                            {service.provider.rating.toFixed(1)}
-                          </span>
-                        </div>
-                        <span className="text-xs text-slate-500 dark:text-neutral-400">
-                          ({service.provider.totalReviews} {service.provider.totalReviews === 1 ? 'review' : 'reviews'})
-                        </span>
-                      </div>
-                    )}
-                    {service.provider.description && (
-                      <p className="text-sm text-slate-600 dark:text-neutral-300 mt-2">{service.provider.description}</p>
-                    )}
+                  <div className="mt-3 lg:mt-4 flex justify-between items-center">
+                    <span className="text-slate-600 dark:text-neutral-300 font-medium text-sm md:text-base">Duration</span>
+                    <span className="font-semibold text-slate-900 dark:text-neutral-100 text-sm md:text-base">{service.duration} minutes</span>
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Location with Map */}
-            {service.location && (
-              <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-neutral-100 mb-4">Service Location</h2>
-                <LocationPicker
-                  initialLocation={service.location}
-                  readOnly={true}
-                />
+                {/* Description */}
+                <div className="bg-white dark:bg-neutral-800 rounded-xl p-5 md:p-6 lg:p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+                  <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-neutral-100 mb-3 lg:mb-4">Description</h2>
+                  <p className="text-sm md:text-base text-slate-600 dark:text-neutral-300 leading-relaxed">{service.description}</p>
+                </div>
+
+                {/* Provider Card */}
+                {service.provider && (
+                  <div className="bg-white dark:bg-neutral-800 rounded-xl p-5 md:p-6 lg:p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+                    <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-neutral-100 mb-3 lg:mb-4">Service Provider</h2>
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                        {service.provider.businessName?.[0]?.toUpperCase() || 'P'}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-base md:text-lg font-semibold text-slate-900 dark:text-neutral-100 mb-1">{service.provider.businessName}</p>
+                        {service.provider.rating > 0 && (
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center">
+                              <svg className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                              </svg>
+                              <span className="ml-1 text-sm font-semibold text-slate-900 dark:text-neutral-100">
+                                {service.provider.rating.toFixed(1)}
+                              </span>
+                            </div>
+                            <span className="text-xs text-slate-500 dark:text-neutral-400">
+                              ({service.provider.totalReviews} {service.provider.totalReviews === 1 ? 'review' : 'reviews'})
+                            </span>
+                          </div>
+                        )}
+                        {service.provider.description && (
+                          <p className="text-sm text-slate-600 dark:text-neutral-300 mt-2">{service.provider.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Location with Map */}
+                {service.location && (
+                  <div className="bg-white dark:bg-neutral-800 rounded-xl p-5 md:p-6 lg:p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+                    <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-neutral-100 mb-3 lg:mb-4">Service Location</h2>
+                    <LocationPicker
+                      initialLocation={service.location}
+                      readOnly={true}
+                    />
+                  </div>
+                )}
+
+                {/* Spacer for sticky bottom button */}
+                <div className="h-20" />
               </div>
-            )}
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop/Tablet: Sticky Button (footer-aware) */}
+        <div className="hidden md:block">
+          <div className="sticky bottom-0 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-neutral-700 shadow-lg z-40 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-2 md:py-2 lg:py-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex md:gap-4 lg:gap-8">
+                <div className="md:w-[50%] lg:w-[40%] flex-shrink-0" />
+                <div className="md:w-[50%] lg:w-[60%] flex-shrink-0">
+                  <PrimaryButton 
+                    onClick={handleBook} 
+                    className="w-full text-base md:text-lg lg:text-lg py-2.5 md:py-3.5 lg:py-4 h-10 md:h-14 lg:h-12" 
+                    icon="→" 
+                    iconPosition="right"
+                  >
+                    Book This Service
+                  </PrimaryButton>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -308,7 +337,7 @@ const ServiceDetails = () => {
             <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
               <div className="flex justify-between items-center">
                 <span className="text-slate-600 dark:text-neutral-300 font-medium text-lg">Price</span>
-                <span className="text-4xl font-extrabold text-blue-600 dark:text-blue-400">${service.price}</span>
+                <span className="text-4xl font-extrabold text-blue-600 dark:text-blue-400">₹{service.price}</span>
               </div>
               <div className="mt-4 flex justify-between items-center">
                 <span className="text-slate-600 dark:text-neutral-300 font-medium">Duration</span>
@@ -365,21 +394,19 @@ const ServiceDetails = () => {
                 />
               </div>
             )}
-          </div>
-        </div>
-      </div>
 
-      {/* Fixed Bottom CTA Button (Mobile & Desktop) */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-neutral-700 shadow-lg z-50 p-4 md:p-6">
-        <div className="max-w-7xl mx-auto">
-          <PrimaryButton 
-            onClick={handleBook} 
-            className="w-full text-lg py-4" 
-            icon="→" 
-            iconPosition="right"
-          >
-            Book This Service
-          </PrimaryButton>
+            {/* Mobile: CTA Button */}
+            <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-neutral-700 mt-6">
+              <PrimaryButton 
+                onClick={handleBook} 
+                className="w-full text-lg py-4" 
+                icon="→" 
+                iconPosition="right"
+              >
+                Book This Service
+              </PrimaryButton>
+            </div>
+          </div>
         </div>
       </div>
     </div>

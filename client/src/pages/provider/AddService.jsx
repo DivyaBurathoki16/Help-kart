@@ -30,15 +30,8 @@ const AddService = () => {
 
   const fetchCategories = async () => {
     try {
-      // Get provider ID to fetch their custom categories
-      const providerResponse = await axios.get(getApiUrl('api/provider/profile')).catch(() => null);
-      const providerId = providerResponse?.data?.provider?._id;
-      
-      const url = providerId 
-        ? getApiUrl(`api/services/categories/list?providerId=${providerId}`)
-        : getApiUrl('api/services/categories/list');
-      
-      const response = await axios.get(url);
+      // Fetch all global categories (system + custom global)
+      const response = await axios.get(getApiUrl('api/services/categories/list'));
       setCategories(response.data.categories || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -245,7 +238,7 @@ const AddService = () => {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="price" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
-                  Price ($) *
+                  Price (₹) *
                 </label>
                 <input
                   type="number"

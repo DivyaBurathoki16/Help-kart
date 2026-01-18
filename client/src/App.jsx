@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import ScrollArrows from './components/ScrollArrows';
+import WelcomeMessage from './components/WelcomeMessage';
 
 // Pages
 import Home from './pages/Home';
@@ -26,6 +27,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CustomerDashboard from './pages/customer/Dashboard';
 import MyBookings from './pages/customer/MyBookings';
+import CustomerProfile from './pages/customer/CustomerProfile';
+import NearMe from './pages/customer/NearMe';
 import Booking from './pages/Booking';
 import Payment from './pages/Payment';
 import ProviderDashboard from './pages/provider/Dashboard';
@@ -46,6 +49,7 @@ function App() {
           <ScrollToTop />
           <div className="App min-h-screen bg-white dark:bg-neutral-950 flex flex-col transition-colors duration-300">
             <Navbar />
+            <WelcomeMessage />
             <main className="pt-28 md:pt-32 flex-1">
             <Routes>
               {/* Public Routes */}
@@ -82,6 +86,22 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['customer']}>
                     <MyBookings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/customer/profile"
+                element={
+                  <ProtectedRoute allowedRoles={['customer']}>
+                    <CustomerProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/customer/near-me"
+                element={
+                  <ProtectedRoute allowedRoles={['customer']}>
+                    <NearMe />
                   </ProtectedRoute>
                 }
               />

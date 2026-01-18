@@ -135,7 +135,7 @@ const MyServices = () => {
                   </p>
 
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">${service.price}</span>
+                    <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">₹{service.price}</span>
                     <span className="text-sm text-gray-500 dark:text-neutral-400">{service.duration} min</span>
                   </div>
 

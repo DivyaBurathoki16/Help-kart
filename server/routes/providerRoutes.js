@@ -204,26 +204,26 @@ router.post('/categories', protect, authorize('provider'), async (req, res) => {
       return res.status(400).json({ success: false, message: 'Category name is required' });
     }
 
-    // Check if category already exists for this provider
+    // Check if global category already exists (provider: null)
     const existingCategory = await Category.findOne({
       name: name.trim(),
-      provider: provider._id,
+      provider: null,
     });
 
     if (existingCategory) {
       return res.status(400).json({
         success: false,
-        message: 'You already have a category with this name',
+        message: 'A category with this name already exists',
       });
     }
 
-    // Create custom category
+    // Create global custom category (visible to all providers and users)
     const category = await Category.create({
       name: name.trim(),
       description: description || '',
       isCustom: true,
       createdBy: req.user._id,
-      provider: provider._id,
+      provider: null, // Global category - visible to everyone
       isActive: true,
     });
 

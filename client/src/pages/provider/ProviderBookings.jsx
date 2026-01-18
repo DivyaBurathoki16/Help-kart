@@ -285,7 +285,7 @@ const ProviderBookings = () => {
                           )}
                         </div>
                         <div className="text-right">
-                          <p className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">${booking.totalAmount}</p>
+                          <p className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">₹{booking.totalAmount}</p>
                           <p className="text-xs text-slate-500 dark:text-neutral-400">Total Amount</p>
                         </div>
                       </div>

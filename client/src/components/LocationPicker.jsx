@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { useEffect, useState, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -60,7 +60,48 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
     }
   };
 
-  // Map click handler component
+  // Map interaction handler - enables scroll zoom and dragging on hover
+  const MapInteractionHandler = () => {
+    const map = useMap();
+
+    useEffect(() => {
+      if (!map) return;
+
+      // Enable interactions when user hovers over the map
+      const handleMouseEnter = () => {
+        map.scrollWheelZoom.enable();
+        map.dragging.enable();
+      };
+
+      // For readOnly maps, disable on mouse leave to prevent scroll hijacking
+      // For editable maps, keep enabled for better UX
+      const handleMouseLeave = () => {
+        if (readOnly) {
+          map.scrollWheelZoom.disable();
+          map.dragging.disable();
+        }
+      };
+
+      // Enable interactions on mouse enter
+      map.on('mouseenter', handleMouseEnter);
+      
+      // For readOnly maps, disable on mouse leave
+      if (readOnly) {
+        map.on('mouseout', handleMouseLeave);
+      }
+
+      return () => {
+        map.off('mouseenter', handleMouseEnter);
+        if (readOnly) {
+          map.off('mouseout', handleMouseLeave);
+        }
+      };
+    }, [map, readOnly]);
+
+    return null;
+  };
+
+  // Map click handler component for setting location
   const MapClickHandler = () => {
     useMapEvents({
       click: (e) => {
@@ -97,25 +138,38 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
-          Service Location {!readOnly && '*'}
+          {readOnly ? 'Location' : 'Location'} {!readOnly && '*'}
         </label>
-        <div className="border border-slate-300 dark:border-neutral-700 rounded-lg overflow-hidden" style={{ height: '400px' }}>
+        <div className="relative border border-slate-300 dark:border-neutral-700 rounded-lg overflow-hidden h-[400px] md:min-h-[300px] lg:h-[400px]">
           <MapContainer
             center={position}
             zoom={13}
             style={{ height: '100%', width: '100%' }}
+            scrollWheelZoom={false}
+            dragging={false}
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <Marker position={position} />
+            <MapInteractionHandler />
             {!readOnly && <MapClickHandler />}
           </MapContainer>
+          {readOnly && (
+            <div className="absolute top-2 left-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-md text-xs text-slate-700 dark:text-neutral-300 z-[1000] pointer-events-none">
+              Hover over map to interact
+            </div>
+          )}
+          {!readOnly && (
+            <div className="absolute top-2 left-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-md text-xs text-slate-700 dark:text-neutral-300 z-[1000] pointer-events-none">
+              Hover over map to scroll and zoom, click to set location
+            </div>
+          )}
         </div>
         {!readOnly && (
           <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
-            Click on the map to set the service location
+            Hover over the map to scroll and zoom. Click on the map to set your location.
           </p>
         )}
       </div>

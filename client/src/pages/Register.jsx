@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import PasswordInput from '../components/ui/PasswordInput';
 
 const Register = () => {
   const [searchParams] = useSearchParams();
@@ -137,16 +138,13 @@ const Register = () => {
               <label htmlFor="password" className="block text-sm font-semibold text-slate-700 dark:text-neutral-300 mb-2">
                 Password
               </label>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-text"
-                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
-                style={{ caretColor: '#3b82f6' }}
+                placeholder="Enter your password"
+                required
               />
             </div>
 
@@ -154,16 +152,13 @@ const Register = () => {
               <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-700 dark:text-neutral-300 mb-2">
                 Confirm Password
               </label>
-              <input
+              <PasswordInput
                 id="confirmPassword"
                 name="confirmPassword"
-                type="password"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-text"
-                placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                style={{ caretColor: '#3b82f6' }}
+                placeholder="Confirm your password"
+                required
               />
             </div>
 

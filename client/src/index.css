@@ -160,3 +160,30 @@
 .leaflet-container {
     z-index: 1;
 }
+
+/* Custom Leaflet Tooltip Styles */
+.leaflet-tooltip.custom-tooltip {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    padding: 10px 12px;
+    font-size: 13px;
+    max-width: 220px;
+    margin-top: -8px;
+}
+
+.dark .leaflet-tooltip.custom-tooltip {
+    background: rgba(23, 23, 23, 0.95);
+    border-color: rgba(64, 64, 64, 0.8);
+    color: rgb(245, 245, 245);
+}
+
+.leaflet-tooltip.custom-tooltip::before {
+    border-top-color: rgba(255, 255, 255, 0.95);
+}
+
+.dark .leaflet-tooltip.custom-tooltip::before {
+    border-top-color: rgba(23, 23, 23, 0.95);
+}

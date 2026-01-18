@@ -4,12 +4,13 @@ import axios from 'axios';
 import Card from '../components/ui/Card';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import PageHeader from '../components/PageHeader';
+import { useAuth } from '../context/AuthContext';
 import { getApiUrl } from '../config/api';
 import API_URL from '../config/api';
 
 // Sample locations for random assignment
 const AREAS = ['Downtown', 'Midtown', 'Uptown', 'Westside', 'Eastside', 'North Park', 'South Bay', 'Central District', 'Riverside', 'Hillcrest', 'Oakwood', 'Maple Heights', 'Green Valley', 'Sunset Hills', 'Ocean View'];
-const CITIES = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose', 'Austin', 'Jacksonville', 'San Francisco', 'Columbus', 'Fort Worth'];
+const CITIES = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Surat', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane'];
 
 // Helper function to get random item from array
 const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -63,6 +64,7 @@ const STATIC_SERVICES = STATIC_SERVICES_BASE.map(service => ({
 }));
 
 const Services = () => {
+  const { user } = useAuth();
   const [services, setServices] = useState(STATIC_SERVICES); // Start with static services
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -72,6 +74,8 @@ const Services = () => {
     city: '',
     availability: '',
     minRating: '',
+    sortBy: '',
+    maxDistance: '',
   });
 
   useEffect(() => {
@@ -85,6 +89,8 @@ const Services = () => {
       const params = {};
       if (filters.search) params.search = filters.search;
       if (filters.category) params.category = filters.category;
+      if (filters.sortBy) params.sortBy = filters.sortBy;
+      if (filters.maxDistance) params.maxDistance = filters.maxDistance;
 
       const response = await axios.get(getApiUrl('api/services'), { params });
       // Always merge with static services
@@ -244,6 +250,51 @@ const Services = () => {
               <option value="3.0">3.0+ Stars</option>
             </select>
           </div>
+
+          {/* Sort and Distance Filters Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Sort By */}
+            <select
+              className="px-5 py-3 border border-slate-300 dark:border-neutral-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm text-slate-900 dark:text-neutral-100 transition-all duration-300"
+              value={filters.sortBy}
+              onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+            >
+              <option value="">Sort by: Default</option>
+              {user && user.location && (
+                <option value="distance">Sort by: Distance (Nearest)</option>
+              )}
+              <option value="price">Sort by: Price (Lowest)</option>
+              <option value="rating">Sort by: Rating (Highest)</option>
+            </select>
+
+            {/* Max Distance Filter (only show if user has location) */}
+            {user && user.location && (
+              <select
+                className="px-5 py-3 border border-slate-300 dark:border-neutral-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm text-slate-900 dark:text-neutral-100 transition-all duration-300"
+                value={filters.maxDistance}
+                onChange={(e) => setFilters({ ...filters, maxDistance: e.target.value })}
+              >
+                <option value="">All Distances</option>
+                <option value="5">Within 5 km</option>
+                <option value="10">Within 10 km</option>
+                <option value="25">Within 25 km</option>
+                <option value="50">Within 50 km</option>
+              </select>
+            )}
+          </div>
+
+          {/* Location Notice */}
+          {user && !user.location && (
+            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong>💡 Tip:</strong> Add your location in{' '}
+                <Link to="/customer/profile" className="underline font-semibold">
+                  your profile
+                </Link>{' '}
+                to see services sorted by distance from you!
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Services Grid */}
@@ -308,15 +359,20 @@ const Services = () => {
                         )}
                       </div>
 
-                      {/* Location */}
-                      {service.location && (
+                      {/* Location and Distance */}
+                      {(service.location || service.distance !== undefined) && (
                         <div className="flex items-center gap-1.5 mb-3 text-slate-500 dark:text-neutral-400 text-sm">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
                           <span>
-                            {service.location.city || ''}{service.location.city && service.location.state ? ', ' : ''}{service.location.state || ''}
+                            {service.location?.city || ''}{service.location?.city && service.location?.state ? ', ' : ''}{service.location?.state || ''}
+                            {service.distance !== undefined && service.distance !== null && (
+                              <span className="ml-2 font-semibold text-blue-600 dark:text-blue-400">
+                                • {service.distance.toFixed(1)} km away
+                              </span>
+                            )}
                           </span>
                         </div>
                       )}
@@ -345,7 +401,7 @@ const Services = () => {
                       </p>
 
                       <div className="mt-auto flex items-baseline gap-1">
-                        <span className="text-2xl font-black text-blue-600 dark:text-blue-400">${service.price}</span>
+                        <span className="text-2xl font-black text-blue-600 dark:text-blue-400">₹{service.price}</span>
                       </div>
                     </div>
                   </Link>

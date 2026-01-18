@@ -84,11 +84,14 @@ const CustomerDashboard = () => {
             <p className="text-lg text-slate-600 dark:text-neutral-300">Find the best professionals for your home needs today</p>
           </div>
           <div className="flex gap-3">
-            <button className="px-6 py-3 bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-2xl font-bold text-slate-900 dark:text-neutral-100 shadow-sm hover:shadow-md transition-all flex items-center gap-2">
+            <button
+              onClick={() => navigate('/customer/profile')}
+              className="px-6 py-3 bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-2xl font-bold text-slate-900 dark:text-neutral-100 shadow-sm hover:shadow-md transition-all flex items-center gap-2"
+            >
               <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              Preferences
+              Profile
             </button>
             <button
               onClick={() => navigate('/services')}
@@ -219,7 +222,7 @@ const CustomerDashboard = () => {
                           {booking.status.replace('_', ' ')}
                         </span>
                         <span className="text-2xl font-bold font-display text-blue-600">
-                          ${booking.totalAmount}
+                          ₹{booking.totalAmount}
                         </span>
                         <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
