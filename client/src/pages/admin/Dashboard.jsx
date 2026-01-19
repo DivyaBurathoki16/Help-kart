@@ -5,6 +5,7 @@ import Card from '../../components/ui/Card';
 import StatusBadge from '../../components/ui/StatusBadge';
 import PrimaryButton from '../../components/ui/PrimaryButton';
 import AdminMessages from '../../components/Admin/AdminMessages';
+import AdminContent from '../../components/Admin/AdminContent';
 import { getApiUrl } from '../../config/api';
 import API_URL from '../../config/api';
 
@@ -18,7 +19,7 @@ const AdminDashboard = () => {
   const [refundAmount, setRefundAmount] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
   const [resolving, setResolving] = useState(false);
-  const [activeTab, setActiveTab] = useState('issues'); // 'issues', 'behavior', or 'messages'
+  const [activeTab, setActiveTab] = useState('issues'); // 'issues', 'behavior', 'messages', 'content'
   const [behaviorReports, setBehaviorReports] = useState([]);
   const [reviewModal, setReviewModal] = useState(null); // { report }
   const [reviewAction, setReviewAction] = useState('none');
@@ -326,12 +327,26 @@ const AdminDashboard = () => {
           >
             Contact Messages
           </button>
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'content'
+                ? 'border-b-2 border-emerald-600 dark:border-emerald-400 text-emerald-600 dark:text-emerald-400'
+                : 'text-slate-500 dark:text-neutral-400 hover:text-slate-700 dark:hover:text-neutral-300'
+            }`}
+          >
+            Site Content
+          </button>
         </div>
 
         {/* Content based on tab */}
         {activeTab === 'messages' ? (
           <Card className="p-6">
             <AdminMessages />
+          </Card>
+        ) : activeTab === 'content' ? (
+          <Card className="p-6">
+            <AdminContent />
           </Card>
         ) : activeTab === 'issues' ? (
           <Card className="p-6">

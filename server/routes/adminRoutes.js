@@ -1,6 +1,8 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Booking from '../models/Booking.js';
 import Contact from '../models/Contact.js';
+import PageContent from '../models/PageContent.js';
 import { protect, authorize } from '../middleware/auth.js';
 import { sendReplyToUser } from '../utils/emailService.js';
 
@@ -252,6 +254,51 @@ router.patch('/messages/:id/read', protect, authorize('admin', 'super_admin'), a
     res.status(500).json({
       success: false,
       message: error.message || 'Failed to update message status',
+    });
+  }
+});
+
+// Page content management (Admin CMS)
+
+// @route   PUT /api/admin/pages/:slug
+// @desc    Create or update dynamic page content (ADMIN ONLY)
+// @access  Private/Admin
+router.put('/pages/:slug', protect, authorize('admin', 'super_admin'), async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const { data } = req.body;
+
+    if (!data || typeof data !== 'object') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid data format. Expected an object in "data" field.',
+      });
+    }
+
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database is not connected. Please configure MONGODB_URI in your .env file.',
+      });
+    }
+
+    const page = await PageContent.findOneAndUpdate(
+      { slug },
+      { data },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+
+    res.json({
+      success: true,
+      page,
+      message: 'Page content saved to database successfully',
+    });
+  } catch (error) {
+    console.error('Error updating page content:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to update page content',
     });
   }
 });
