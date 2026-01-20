@@ -2,12 +2,16 @@ import express from 'express';
 import BehaviorReport from '../models/BehaviorReport.js';
 import Booking from '../models/Booking.js';
 import Provider from '../models/Provider.js';
+<<<<<<< HEAD
 import User from '../models/User.js';
 import { protect, authorize } from '../middleware/auth.js';
 import {
   sendBehaviorReportSubmittedEmail,
   sendBehaviorReportReviewedEmail,
 } from '../utils/emailService.js';
+=======
+import { protect, authorize } from '../middleware/auth.js';
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
 const router = express.Router();
 
@@ -18,14 +22,22 @@ router.post('/', protect, authorize('customer'), async (req, res) => {
     try {
         const { bookingId, issueType, description } = req.body;
 
+<<<<<<< HEAD
         const booking = await Booking.findById(bookingId).populate('customer', 'name email');
+=======
+        const booking = await Booking.findById(bookingId);
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         if (!booking) {
             return res.status(404).json({ success: false, message: 'Booking not found' });
         }
 
+<<<<<<< HEAD
         const bookingCustomerId = booking.customer?._id ? booking.customer._id.toString() : booking.customer.toString();
 
         if (bookingCustomerId !== req.user._id.toString()) {
+=======
+        if (booking.customer.toString() !== req.user._id.toString()) {
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 
@@ -44,6 +56,7 @@ router.post('/', protect, authorize('customer'), async (req, res) => {
         booking.behaviorReported = true;
         await booking.save();
 
+<<<<<<< HEAD
         // Increment provider's report count and notify provider
         const provider = await Provider.findById(booking.provider).populate('user', 'name email');
         if (provider) {
@@ -65,6 +78,13 @@ router.post('/', protect, authorize('customer'), async (req, res) => {
             } catch (notifyError) {
                 console.error('Error sending behavior report submitted email to provider:', notifyError);
             }
+=======
+        // Increment provider's report count
+        const provider = await Provider.findById(booking.provider);
+        if (provider) {
+            provider.reportCount = (provider.reportCount || 0) + 1;
+            await provider.save();
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         }
 
         res.status(201).json({ success: true, report });
@@ -96,7 +116,11 @@ router.get('/', protect, authorize('admin'), async (req, res) => {
 router.patch('/:id/review', protect, authorize('admin'), async (req, res) => {
     try {
         const { actionTaken, adminNotes } = req.body;
+<<<<<<< HEAD
         const report = await BehaviorReport.findById(req.params.id).populate('booking', 'bookingDate bookingTime');
+=======
+        const report = await BehaviorReport.findById(req.params.id);
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
         if (!report) {
             return res.status(404).json({ success: false, message: 'Report not found' });
@@ -107,7 +131,11 @@ router.patch('/:id/review', protect, authorize('admin'), async (req, res) => {
         report.status = 'reviewed';
 
         if (actionTaken !== 'none') {
+<<<<<<< HEAD
             const provider = await Provider.findById(report.provider).populate('user', 'name email');
+=======
+            const provider = await Provider.findById(report.provider);
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             if (provider) {
                 if (actionTaken === 'warning') {
                     provider.warningCount += 1;
@@ -130,6 +158,7 @@ router.patch('/:id/review', protect, authorize('admin'), async (req, res) => {
                     provider.isBanned = true;
                 }
                 await provider.save();
+<<<<<<< HEAD
 
                 // Notify provider about the admin's decision on the report
                 try {
@@ -144,6 +173,8 @@ router.patch('/:id/review', protect, authorize('admin'), async (req, res) => {
                 } catch (notifyError) {
                     console.error('Error sending behavior report reviewed email to provider:', notifyError);
                 }
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             }
             report.status = 'action_taken';
         }

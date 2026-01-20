@@ -186,6 +186,7 @@
 
 .dark .leaflet-tooltip.custom-tooltip::before {
     border-top-color: rgba(23, 23, 23, 0.95);
+<<<<<<< HEAD
 }
 
 /* react-phone-input-2 Custom Styles */
@@ -319,4 +320,6 @@
 
 .dark .react-tel-input .search::placeholder {
     color: rgb(115 115 115);
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 }

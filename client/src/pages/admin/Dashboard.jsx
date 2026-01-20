@@ -5,7 +5,11 @@ import Card from '../../components/ui/Card';
 import StatusBadge from '../../components/ui/StatusBadge';
 import PrimaryButton from '../../components/ui/PrimaryButton';
 import AdminMessages from '../../components/Admin/AdminMessages';
+<<<<<<< HEAD
 import DeleteConfirmModal from '../../components/modals/DeleteConfirmModal';
+=======
+import AdminContent from '../../components/Admin/AdminContent';
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 import { getApiUrl } from '../../config/api';
 import API_URL from '../../config/api';
 
@@ -19,16 +23,23 @@ const AdminDashboard = () => {
   const [refundAmount, setRefundAmount] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
   const [resolving, setResolving] = useState(false);
+<<<<<<< HEAD
   const [activeTab, setActiveTab] = useState('issues'); // 'issues', 'behavior', or 'messages'
+=======
+  const [activeTab, setActiveTab] = useState('issues'); // 'issues', 'behavior', 'messages', 'content'
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   const [behaviorReports, setBehaviorReports] = useState([]);
   const [reviewModal, setReviewModal] = useState(null); // { report }
   const [reviewAction, setReviewAction] = useState('none');
   const [reviewNotes, setReviewNotes] = useState('');
   const [reviewing, setReviewing] = useState(false);
+<<<<<<< HEAD
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [deleteReviewModal, setDeleteReviewModal] = useState(null);
   const [deletingReview, setDeletingReview] = useState(false);
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   // Search and Filter State
   const [searchTerm, setSearchTerm] = useState('');
@@ -64,6 +75,7 @@ const AdminDashboard = () => {
     }
   };
 
+<<<<<<< HEAD
   const fetchReviews = async () => {
     try {
       setReviewsLoading(true);
@@ -98,6 +110,8 @@ const AdminDashboard = () => {
     }
   };
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   const handleReviewClick = (report) => {
     setReviewModal(report);
     setReviewAction('none');
@@ -220,6 +234,7 @@ const AdminDashboard = () => {
     return matchesSearch && matchesStatus && matchesType;
   });
 
+<<<<<<< HEAD
   const filteredReviews = reviews.filter(review => {
     const matchesSearch =
       (review.customer?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -229,6 +244,8 @@ const AdminDashboard = () => {
     return matchesSearch;
   });
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 py-12 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -239,6 +256,7 @@ const AdminDashboard = () => {
 
         {/* Statistics Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
+<<<<<<< HEAD
           <Card className="p-6 border-l-4 border-amber-500 dark:bg-neutral-800 dark:border-amber-400 hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-start justify-between">
               <div>
@@ -294,6 +312,27 @@ const AdminDashboard = () => {
                 </svg>
               </div>
             </div>
+=======
+          <Card className="p-6 border-l-4 border-amber-500 dark:bg-neutral-800 dark:border-amber-400">
+            <div className="text-3xl font-extrabold text-amber-600 dark:text-amber-400">{pendingIssues.length}</div>
+            <div className="text-slate-600 dark:text-neutral-300 mt-1 font-bold text-xs uppercase tracking-wider">Pending Issues</div>
+            <p className="text-[10px] text-slate-400 dark:text-neutral-500 mt-1 font-medium">Awaiting manual review</p>
+          </Card>
+          <Card className="p-6 border-l-4 border-blue-500 dark:bg-neutral-800 dark:border-blue-400">
+            <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">{redoRequired.length}</div>
+            <div className="text-slate-600 dark:text-neutral-300 mt-1 font-bold text-xs uppercase tracking-wider">Redo Required</div>
+            <p className="text-[10px] text-slate-400 dark:text-neutral-500 mt-1 font-medium">Providers taking action</p>
+          </Card>
+          <Card className="p-6 border-l-4 border-purple-500 dark:bg-neutral-800 dark:border-purple-400">
+            <div className="text-3xl font-extrabold text-purple-600 dark:text-purple-400">{refundPending.length}</div>
+            <div className="text-slate-600 dark:text-neutral-300 mt-1 font-bold text-xs uppercase tracking-wider">Refunds Pending</div>
+            <p className="text-[10px] text-slate-400 dark:text-neutral-500 mt-1 font-medium">Money back to customers</p>
+          </Card>
+          <Card className="p-6 border-l-4 border-slate-500 dark:bg-neutral-800 dark:border-neutral-500">
+            <div className="text-3xl font-extrabold text-slate-700 dark:text-neutral-300">{issues.length}</div>
+            <div className="text-slate-600 dark:text-neutral-300 mt-1 font-bold text-xs uppercase tracking-wider">Total Lifetime</div>
+            <p className="text-[10px] text-slate-400 dark:text-neutral-500 mt-1 font-medium">Cumulative issue count</p>
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
           </Card>
         </div>
 
@@ -402,6 +441,7 @@ const AdminDashboard = () => {
             )}
           </button>
           <button
+<<<<<<< HEAD
             onClick={() => {
               setActiveTab('reviews');
               if (!reviews.length) {
@@ -416,6 +456,8 @@ const AdminDashboard = () => {
             Reviews ({reviews.length})
           </button>
           <button
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             onClick={() => setActiveTab('messages')}
             className={`px-6 py-3 font-semibold transition-all ${activeTab === 'messages'
               ? 'border-b-2 border-green-600 dark:border-green-400 text-green-600 dark:text-green-400'
@@ -424,6 +466,19 @@ const AdminDashboard = () => {
           >
             Contact Messages
           </button>
+<<<<<<< HEAD
+=======
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'content'
+                ? 'border-b-2 border-emerald-600 dark:border-emerald-400 text-emerald-600 dark:text-emerald-400'
+                : 'text-slate-500 dark:text-neutral-400 hover:text-slate-700 dark:hover:text-neutral-300'
+            }`}
+          >
+            Site Content
+          </button>
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         </div>
 
         {/* Content based on tab */}
@@ -431,6 +486,13 @@ const AdminDashboard = () => {
           <Card className="p-6">
             <AdminMessages />
           </Card>
+<<<<<<< HEAD
+=======
+        ) : activeTab === 'content' ? (
+          <Card className="p-6">
+            <AdminContent />
+          </Card>
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         ) : activeTab === 'issues' ? (
           <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
@@ -579,7 +641,11 @@ const AdminDashboard = () => {
               </div>
             )}
           </Card>
+<<<<<<< HEAD
         ) : activeTab === 'behavior' ? (
+=======
+        ) : (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
           <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -672,6 +738,7 @@ const AdminDashboard = () => {
               </div>
             )}
           </Card>
+<<<<<<< HEAD
         ) : (
           <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
@@ -770,6 +837,8 @@ const AdminDashboard = () => {
               </div>
             )}
           </Card>
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         )}
       </div>
 
@@ -1071,6 +1140,7 @@ const AdminDashboard = () => {
           </Card>
         </div>
       )}
+<<<<<<< HEAD
 
       {/* Delete Review Confirmation Modal */}
       <DeleteConfirmModal
@@ -1081,6 +1151,8 @@ const AdminDashboard = () => {
         message="Are you sure you want to delete this review? This action cannot be undone."
         isLoading={deletingReview}
       />
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     </div>
   );
 };

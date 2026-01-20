@@ -16,6 +16,7 @@ const createTransporter = () => {
   });
 };
 
+<<<<<<< HEAD
 // Format date & time for booking emails
 const formatBookingDateTime = (bookingDate, bookingTime) => {
   try {
@@ -245,6 +246,8 @@ Booking ID: ${bookingId || 'N/A'}
   return { success: true, messageId: info.messageId };
 };
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 // Send contact form notification to admin
 export const sendContactNotification = async (contactData) => {
   try {
@@ -563,6 +566,7 @@ The HelpKart Team
     console.error('Error sending welcome email:', error);
     throw error;
   }
+<<<<<<< HEAD
 };
 
 // Notify provider when a behavior report is submitted against them
@@ -744,4 +748,6 @@ Booking ID: ${bookingId || 'N/A'}
   const info = await transporter.sendMail(mailOptions);
   console.log('Behavior report reviewed email sent to provider:', info.messageId);
   return { success: true, messageId: info.messageId };
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 };

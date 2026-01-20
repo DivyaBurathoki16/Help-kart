@@ -6,7 +6,10 @@ import Category from '../models/Category.js';
 import User from '../models/User.js';
 import { protect, authorize } from '../middleware/auth.js';
 import { canCompleteBooking, applyAutoTransitions } from '../utils/bookingHelpers.js';
+<<<<<<< HEAD
 import { sendBookingStatusEmail } from '../utils/emailService.js';
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
 const router = express.Router();
 
@@ -410,6 +413,7 @@ router.patch('/bookings/:id', protect, authorize('provider'), async (req, res) =
 
       const populatedBooking = await Booking.findById(booking._id)
         .populate('service', 'title price duration')
+<<<<<<< HEAD
         .populate('customer', 'name email phone')
         .populate('provider', 'businessName');
 
@@ -420,6 +424,9 @@ router.patch('/bookings/:id', protect, authorize('provider'), async (req, res) =
         console.error('Error sending booking accepted email:', notifyError);
         // Do not fail the main request if email fails
       }
+=======
+        .populate('customer', 'name email phone');
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
       return res.json({
         success: true,
@@ -649,6 +656,7 @@ router.post('/bookings/:id/resolve-conflicts', protect, authorize('provider'), a
 
     const populatedBooking = await Booking.findById(booking._id)
       .populate('service', 'title price duration')
+<<<<<<< HEAD
       .populate('customer', 'name email phone')
       .populate('provider', 'businessName');
 
@@ -658,6 +666,9 @@ router.post('/bookings/:id/resolve-conflicts', protect, authorize('provider'), a
     } catch (notifyError) {
       console.error('Error sending booking accepted email (conflict resolution):', notifyError);
     }
+=======
+      .populate('customer', 'name email phone');
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
     res.json({
       success: true,

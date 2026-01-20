@@ -3,12 +3,20 @@ import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getApiUrl } from '../config/api';
+<<<<<<< HEAD
+=======
+import usePageContent from '../hooks/usePageContent';
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [imageErrors, setImageErrors] = useState({});
+<<<<<<< HEAD
+=======
+  const { data: pageContent } = usePageContent('home');
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   useEffect(() => {
     fetchCategories();
@@ -25,6 +33,7 @@ const Home = () => {
     }
   };
 
+<<<<<<< HEAD
   // Popular services from static services
   const popularServices = [
     { _id: 'static-1', title: 'Plumbing Repair', description: 'Expert plumbing services for leaks, clogs, and installations', price: 75, category: 'Plumbing', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcAZo--21fAx2zHcbQbl1bfz0QqYKLCJCBcQ&s'] },
@@ -34,6 +43,74 @@ const Home = () => {
     { _id: 'static-5', title: 'Lawn Mowing', description: 'Regular lawn maintenance and grass cutting', price: 50, category: 'Lawn Care', images: ['https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400'] },
     { _id: 'static-6', title: 'Interior Painting', description: 'Professional interior painting services', price: 200, category: 'Painting', images: ['https://tiimg.tistatic.com/fp/1/009/149/interior-painting-services-253.jpg'] },
   ];
+=======
+  // Popular services from static services (can be overridden later if needed)
+  const popularServices =
+    pageContent?.popularSection?.services || [
+      {
+        _id: 'static-1',
+        title: 'Plumbing Repair',
+        description:
+          'Expert plumbing services for leaks, clogs, and installations',
+        price: 75,
+        category: 'Plumbing',
+        images: [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcAZo--21fAx2zHcbQbl1bfz0QqYKLCJCBcQ&s',
+        ],
+      },
+      {
+        _id: 'static-2',
+        title: 'Electrical Wiring',
+        description:
+          'Professional electrical work and safety inspections',
+        price: 120,
+        category: 'Electrical',
+        images: [
+          'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400',
+        ],
+      },
+      {
+        _id: 'static-3',
+        title: 'Deep House Cleaning',
+        description: 'Thorough cleaning service for your entire home',
+        price: 150,
+        category: 'Cleaning',
+        images: [
+          'https://scrubnbubbles.com/nitropack_static/QfrgyUUevySXtFoyvtyThjzNOkOfUEbA/assets/images/optimized/rev-508ce78/scrubnbubbles.com/wp-content/uploads/2020/07/how-to-keep-your-house-clean.jpg',
+        ],
+      },
+      {
+        _id: 'static-4',
+        title: 'AC Installation',
+        description: 'Professional AC unit installation and setup',
+        price: 300,
+        category: 'AC Repair',
+        images: [
+          'https://tiimg.tistatic.com/fp/2/008/507/air-conditioning-installation-service-in-west-bengal-655.jpg',
+        ],
+      },
+      {
+        _id: 'static-5',
+        title: 'Lawn Mowing',
+        description: 'Regular lawn maintenance and grass cutting',
+        price: 50,
+        category: 'Lawn Care',
+        images: [
+          'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400',
+        ],
+      },
+      {
+        _id: 'static-6',
+        title: 'Interior Painting',
+        description: 'Professional interior painting services',
+        price: 200,
+        category: 'Painting',
+        images: [
+          'https://tiimg.tistatic.com/fp/1/009/149/interior-painting-services-253.jpg',
+        ],
+      },
+    ];
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   // Category to image mapping using actual service images
   const categoryImages = {
@@ -49,38 +126,87 @@ const Home = () => {
     'Automotive': 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400',
   };
 
+<<<<<<< HEAD
   const features = [
     {
       title: "Easy Discovery",
       description: "Find the perfect service provider with smart search and instant filters.",
       icon: (
+=======
+  const featuresFromContent =
+    pageContent?.featuresSection?.features?.map((f) => ({
+      ...f,
+    })) || [];
+
+  const features = (featuresFromContent.length
+    ? featuresFromContent
+    : [
+        {
+          title: 'Easy Discovery',
+          description:
+            'Find the perfect service provider with smart search and instant filters.',
+        },
+        {
+          title: 'Verified Experts',
+          description:
+            'Every professional is background-checked and vetted for quality assurance.',
+        },
+        {
+          title: 'Seamless Booking',
+          description:
+            'Book, track, and pay for services in just a few taps - all in one place.',
+        },
+      ]
+  ).map((feature, index) => {
+    const icons = [
+      (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       ),
+<<<<<<< HEAD
       color: "violet"
     },
     {
       title: "Verified Experts",
       description: "Every professional is background-checked and vetted for quality assurance.",
       icon: (
+=======
+      (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       ),
+<<<<<<< HEAD
       color: "rose"
     },
     {
       title: "Seamless Booking",
       description: "Book, track, and pay for services in just a few taps - all in one place.",
       icon: (
+=======
+      (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       ),
+<<<<<<< HEAD
       color: "indigo"
     }
   ];
+=======
+    ];
+    const colors = ['violet', 'rose', 'indigo'];
+    return {
+      ...feature,
+      icon: icons[index % icons.length],
+      color: colors[index % colors.length],
+    };
+  });
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   return (
     <div className="relative isolate">
@@ -112,24 +238,42 @@ const Home = () => {
             <div className="mb-6 lg:mb-8">
               <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold text-white bg-white/10 backdrop-blur-md ring-1 ring-white/20">
                 <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+<<<<<<< HEAD
                 Trusted by 50,000+ happy customers
+=======
+                {pageContent?.hero?.badgeText || 'Trusted by 50,000+ happy customers'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
               </span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] mb-6 lg:mb-8">
+<<<<<<< HEAD
               Reliable Local Services <br />
               <span className="text-blue-200">at Your Doorstep</span>
+=======
+              {(pageContent?.hero?.headingLine1 || 'Reliable Local Services')}{' '}
+              <br />
+              <span className="text-blue-200">
+                {pageContent?.hero?.headingHighlight || 'at Your Doorstep'}
+              </span>
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </h1>
 
             {/* Descriptive Text */}
             <p className="text-lg sm:text-xl leading-relaxed text-white/95 max-w-xl mb-10 lg:mb-12 font-medium">
+<<<<<<< HEAD
               From plumbing to electrical, cleaning to repairs — get verified professionals at your home with just a few clicks. Fast, affordable, and hassle-free.
+=======
+              {pageContent?.hero?.description ||
+                'From plumbing to electrical, cleaning to repairs — get verified professionals at your home with just a few clicks. Fast, affordable, and hassle-free.'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </p>
 
             {/* Call-to-Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 lg:gap-6">
               <Link 
+<<<<<<< HEAD
                 to="/services" 
                 className="bg-[#2563eb] text-white px-8 py-4 rounded-xl text-lg font-bold shadow-2xl shadow-blue-500/40 hover:bg-blue-600 hover:shadow-blue-500/50 transition-all duration-300 flex items-center gap-2 group"
               >
@@ -138,12 +282,26 @@ const Home = () => {
               </Link>
               <Link 
                 to="/how-it-works" 
+=======
+                to={pageContent?.hero?.primaryCta?.link || '/services'}
+                className="bg-[#2563eb] text-white px-8 py-4 rounded-xl text-lg font-bold shadow-2xl shadow-blue-500/40 hover:bg-blue-600 hover:shadow-blue-500/50 transition-all duration-300 flex items-center gap-2 group"
+              >
+                {pageContent?.hero?.primaryCta?.label || 'Book a Service'}
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+              <Link 
+                to={pageContent?.hero?.secondaryCta?.link || '/how-it-works'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                 className="px-8 py-4 rounded-xl text-lg font-bold text-white border-2 border-white/30 hover:bg-white/10 hover:border-white/50 transition-all duration-300 flex items-center gap-2 group backdrop-blur-sm"
               >
                 <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
+<<<<<<< HEAD
                 How It Works
+=======
+                {pageContent?.hero?.secondaryCta?.label || 'How It Works'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
               </Link>
             </div>
           </div>
@@ -155,10 +313,18 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-neutral-100 mb-4">
+<<<<<<< HEAD
               Expert Services for Every Need
             </h2>
             <p className="text-lg text-slate-600 dark:text-neutral-300 max-w-2xl mx-auto">
               Browse our wide range of professional home services, delivered by verified experts in your area.
+=======
+              {pageContent?.expertSection?.title || 'Expert Services for Every Need'}
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-neutral-300 max-w-2xl mx-auto">
+              {pageContent?.expertSection?.subtitle ||
+                'Browse our wide range of professional home services, delivered by verified experts in your area.'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </p>
           </div>
 
@@ -253,10 +419,18 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-neutral-100 mb-4">
+<<<<<<< HEAD
               Popular Services
             </h2>
             <p className="text-lg text-slate-600 dark:text-neutral-300 max-w-2xl mx-auto">
               Most booked services by our customers. Quick, reliable, and affordable.
+=======
+              {pageContent?.popularSection?.title || 'Popular Services'}
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-neutral-300 max-w-2xl mx-auto">
+              {pageContent?.popularSection?.subtitle ||
+                'Most booked services by our customers. Quick, reliable, and affordable.'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </p>
           </div>
 
@@ -326,9 +500,18 @@ const Home = () => {
       <section className="py-32 bg-slate-50 dark:bg-neutral-950 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-24">
+<<<<<<< HEAD
             <h2 className="text-lg font-black leading-7 text-violet-600 dark:text-violet-400 uppercase tracking-[0.2em] mb-4">Why HelpKart?</h2>
             <p className="text-5xl font-black tracking-tight text-slate-900 dark:text-neutral-100 sm:text-6xl">
               Quality you can trust, speed you can rely on.
+=======
+            <h2 className="text-lg font-black leading-7 text-violet-600 dark:text-violet-400 uppercase tracking-[0.2em] mb-4">
+              {pageContent?.featuresSection?.heading || 'Why HelpKart?'}
+            </h2>
+            <p className="text-5xl font-black tracking-tight text-slate-900 dark:text-neutral-100 sm:text-6xl">
+              {pageContent?.featuresSection?.subheading ||
+                'Quality you can trust, speed you can rely on.'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </p>
           </div>
           <div className="grid grid-cols-1 gap-16 sm:grid-cols-3">
@@ -366,6 +549,7 @@ const Home = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-violet-600/30 via-indigo-600/20 to-rose-600/30"></div>
             <div className="relative z-10 text-center max-w-3xl mx-auto">
               <h2 className="text-4xl font-black tracking-tight text-white sm:text-6xl mb-8">
+<<<<<<< HEAD
                 Ready to find the help you need?
               </h2>
               <p className="text-xl leading-10 text-slate-300 mb-12 font-medium">
@@ -377,6 +561,26 @@ const Home = () => {
                 </Link>
                 <Link to="/become-provider" className="text-white hover:text-rose-400 font-bold text-lg transition-colors py-4 px-8 border-2 border-white/10 rounded-2xl hover:bg-white/5">
                   Become a Professional &rarr;
+=======
+                {pageContent?.ctaSection?.heading || 'Ready to find the help you need?'}
+              </h2>
+              <p className="text-xl leading-10 text-slate-300 mb-12 font-medium">
+                {pageContent?.ctaSection?.description ||
+                  'Join thousands of customers who have simplified their lives with HelpKart. Fast, reliable, and always at your service.'}
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <Link
+                  to={pageContent?.ctaSection?.primaryCta?.link || '/register'}
+                  className="btn btn-primary px-12 py-5 text-xl shadow-2xl shadow-violet-500/40 w-full sm:w-auto"
+                >
+                  {pageContent?.ctaSection?.primaryCta?.label || 'Get Started Today'}
+                </Link>
+                <Link
+                  to={pageContent?.ctaSection?.secondaryCta?.link || '/become-provider'}
+                  className="text-white hover:text-rose-400 font-bold text-lg transition-colors py-4 px-8 border-2 border-white/10 rounded-2xl hover:bg-white/5"
+                >
+                  {pageContent?.ctaSection?.secondaryCta?.label || 'Become a Professional →'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                 </Link>
               </div>
             </div>

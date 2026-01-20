@@ -7,6 +7,10 @@ import PageHeader from '../components/PageHeader';
 import { useAuth } from '../context/AuthContext';
 import { getApiUrl } from '../config/api';
 import API_URL from '../config/api';
+<<<<<<< HEAD
+=======
+import usePageContent from '../hooks/usePageContent';
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
 // Sample locations for random assignment
 const AREAS = ['Downtown', 'Midtown', 'Uptown', 'Westside', 'Eastside', 'North Park', 'South Bay', 'Central District', 'Riverside', 'Hillcrest', 'Oakwood', 'Maple Heights', 'Green Valley', 'Sunset Hills', 'Ocean View'];
@@ -27,6 +31,7 @@ const getRandomAvailability = () => {
   return getRandomItem(statuses);
 };
 
+<<<<<<< HEAD
 // Static services that load regardless of backend status
 const STATIC_SERVICES_BASE = [
   { _id: 'static-1', title: 'Plumbing Repair', description: 'Expert plumbing services for leaks, clogs, and installations', price: 75, category: 'Plumbing', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcAZo--21fAx2zHcbQbl1bfz0QqYKLCJCBcQ&s'] },
@@ -66,6 +71,26 @@ const STATIC_SERVICES = STATIC_SERVICES_BASE.map(service => ({
 const Services = () => {
   const { user } = useAuth();
   const [services, setServices] = useState(STATIC_SERVICES); // Start with static services
+=======
+// Static services that load regardless of backend status (can be overridden via CMS)
+const mapStaticServicesWithMeta = (services) =>
+  services.map((service) => ({
+    ...service,
+    location: {
+      area: service.location?.area || getRandomItem(AREAS),
+      city: service.location?.city || getRandomItem(CITIES),
+    },
+    availability: service.availability || getRandomAvailability(),
+    rating: service.rating || getRandomRating(),
+    reviewCount:
+      service.reviewCount || Math.floor(Math.random() * 200 + 10),
+  }));
+
+const Services = () => {
+  const { user } = useAuth();
+  const { data: staticContent } = usePageContent('static-services');
+  const [services, setServices] = useState([]); // Will be initialized after we know static content
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -79,11 +104,49 @@ const Services = () => {
   });
 
   useEffect(() => {
+<<<<<<< HEAD
     fetchServices();
     fetchCategories();
   }, [filters]);
 
   const fetchServices = async () => {
+=======
+    // Initialize with static services from CMS (or default fallback) on first load
+    const baseStatic = mapStaticServicesWithMeta(
+      staticContent?.services || [
+        { _id: 'static-1', title: 'Plumbing Repair', description: 'Expert plumbing services for leaks, clogs, and installations', price: 75, category: 'Plumbing', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcAZo--21fAx2zHcbQbl1bfz0QqYKLCJCBcQ&s'] },
+        { _id: 'static-2', title: 'Electrical Wiring', description: 'Professional electrical work and safety inspections', price: 120, category: 'Electrical', images: ['https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400'] },
+        { _id: 'static-3', title: 'Deep House Cleaning', description: 'Thorough cleaning service for your entire home', price: 150, category: 'Cleaning', images: ['https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400'] },
+        { _id: 'static-4', title: 'AC Installation', description: 'Professional AC unit installation and setup', price: 300, category: 'AC Repair', images: ['https://tiimg.tistatic.com/fp/2/008/507/air-conditioning-installation-service-in-west-bengal-655.jpg'] },
+        { _id: 'static-5', title: 'Lawn Mowing', description: 'Regular lawn maintenance and grass cutting', price: 50, category: 'Lawn Care', images: ['https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400'] },
+        { _id: 'static-6', title: 'Interior Painting', description: 'Professional interior painting services', price: 200, category: 'Painting', images: ['https://tiimg.tistatic.com/fp/1/009/149/interior-painting-services-253.jpg'] },
+        { _id: 'static-7', title: 'Custom Carpentry', description: 'Handcrafted furniture and custom woodwork', price: 250, category: 'Carpentry', images: ['https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400'] },
+        { _id: 'static-8', title: 'Car Oil Change', description: 'Quick and professional automotive oil change service', price: 40, category: 'Automotive', images: ['https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400'] },
+        { _id: 'static-9', title: 'Bathroom Renovation', description: 'Complete bathroom remodeling and renovation', price: 500, category: 'Plumbing', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWTmiDpQe5MPGlfGRuDwzFjgDcnKgky4yknA&s'] },
+        { _id: 'static-10', title: 'Light Fixture Installation', description: 'Install and repair lighting fixtures', price: 80, category: 'Electrical', images: ['https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=400'] },
+        { _id: 'static-11', title: 'Window Cleaning', description: 'Crystal clear window cleaning service', price: 60, category: 'Cleaning', images: ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400'] },
+        { _id: 'static-12', title: 'AC Maintenance', description: 'Regular AC maintenance and tune-up', price: 100, category: 'AC Repair', images: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400'] },
+        { _id: 'static-13', title: 'Garden Landscaping', description: 'Professional garden design and landscaping', price: 350, category: 'Lawn Care', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdqRsEfWL0F3ZVYswhAgnm27MEwrkiCJl59Q&s'] },
+        { _id: 'static-14', title: 'Exterior Painting', description: 'House exterior painting and weatherproofing', price: 400, category: 'Painting', images: ['https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400'] },
+        { _id: 'static-15', title: 'Cabinet Installation', description: 'Custom kitchen and bathroom cabinet installation', price: 450, category: 'Carpentry', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5bJSSeeoiaGcCBQW4dw1_FqNbXc1GqTl0zg&s'] },
+        { _id: 'static-16', title: 'Tire Replacement', description: 'Professional tire replacement and balancing', price: 90, category: 'Automotive', images: ['https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400'] },
+        { _id: 'static-17', title: 'Water Heater Repair', description: 'Fix and maintain your water heater system', price: 130, category: 'Plumbing', images: ['https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=400'] },
+        { _id: 'static-18', title: 'Smart Home Setup', description: 'Install and configure smart home devices', price: 180, category: 'Electrical', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXIUm0I1u6bYd4-nROJgQligZG8QPpk467tA&s'] },
+        { _id: 'static-19', title: 'Carpet Cleaning', description: 'Deep steam cleaning for carpets and rugs', price: 110, category: 'Cleaning', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcUD32Nh4pIHxyGG_DfQHGNTUYq72hdQMq7g&s'] },
+        { _id: 'static-20', title: 'AC Duct Cleaning', description: 'Thorough air duct cleaning and sanitization', price: 200, category: 'AC Repair', images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTitAT5YgqmEpI6cDu7vmjSybcjHeSB9upoTw&s'] },
+      ]
+    );
+
+    setServices(baseStatic);
+  }, [staticContent]);
+
+  useEffect(() => {
+    fetchServices(mapStaticServicesWithMeta(staticContent?.services || []));
+    fetchCategories();
+  }, [filters, staticContent]);
+
+  const fetchServices = async (staticServices = []) => {
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     try {
       setLoading(true);
       const params = {};
@@ -93,6 +156,7 @@ const Services = () => {
       if (filters.maxDistance) params.maxDistance = filters.maxDistance;
 
       const response = await axios.get(getApiUrl('api/services'), { params });
+<<<<<<< HEAD
       // Always merge with static services
       const backendServices = response.data.services || [];
       setServices([...STATIC_SERVICES, ...backendServices]);
@@ -100,6 +164,25 @@ const Services = () => {
       console.error('Error fetching services:', error);
       // If backend fails, use only static services
       setServices(STATIC_SERVICES);
+=======
+      // Always merge with static services (from CMS/default) and backend services
+      const backendServices = response.data.services || [];
+      const staticWithMeta =
+        staticServices.length > 0
+          ? mapStaticServicesWithMeta(staticServices)
+          : services.filter((s) => s._id && String(s._id).startsWith('static-'));
+      setServices([...staticWithMeta, ...backendServices]);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      // If backend fails, keep / fallback to static services
+      setServices(
+        services.length
+          ? services
+          : mapStaticServicesWithMeta(
+              staticServices.length > 0 ? staticServices : staticContent?.services || []
+            )
+      );
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     } finally {
       setLoading(false);
     }
@@ -134,17 +217,28 @@ const Services = () => {
   };
 
   // Get unique cities from services for filter dropdown
+<<<<<<< HEAD
   const uniqueCities = [...new Set(services.map(service =>
+=======
+  const uniqueCities = [...new Set(services.map(service => 
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     service.location?.city || service.provider?.location?.city || ''
   ).filter(Boolean))].sort();
 
   // Filter services based on all filters
   const filteredServices = services.filter(service => {
     // Search filter
+<<<<<<< HEAD
     const matchesSearch = !filters.search ||
       service.title.toLowerCase().includes(filters.search.toLowerCase()) ||
       (service.description && service.description.toLowerCase().includes(filters.search.toLowerCase()));
 
+=======
+    const matchesSearch = !filters.search || 
+      service.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+      (service.description && service.description.toLowerCase().includes(filters.search.toLowerCase()));
+    
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     // Category filter - static services use category name, backend services use category ID
     let matchesCategory = true;
     if (filters.category) {
@@ -159,20 +253,35 @@ const Services = () => {
     }
 
     // City filter
+<<<<<<< HEAD
     const matchesCity = !filters.city ||
+=======
+    const matchesCity = !filters.city || 
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       (service.location?.city && service.location.city === filters.city) ||
       (service.provider?.location?.city && service.provider.location.city === filters.city);
 
     // Availability filter
+<<<<<<< HEAD
     const matchesAvailability = !filters.availability ||
+=======
+    const matchesAvailability = !filters.availability || 
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       (service.availability && service.availability.toLowerCase() === filters.availability.toLowerCase()) ||
       (service.provider?.availability && service.provider.availability.toLowerCase() === filters.availability.toLowerCase());
 
     // Rating filter
+<<<<<<< HEAD
     const matchesRating = !filters.minRating ||
       (service.rating && parseFloat(service.rating) >= parseFloat(filters.minRating)) ||
       (service.provider?.rating && parseFloat(service.provider.rating) >= parseFloat(filters.minRating));
 
+=======
+    const matchesRating = !filters.minRating || 
+      (service.rating && parseFloat(service.rating) >= parseFloat(filters.minRating)) ||
+      (service.provider?.rating && parseFloat(service.provider.rating) >= parseFloat(filters.minRating));
+    
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     return matchesSearch && matchesCategory && matchesCity && matchesAvailability && matchesRating;
   });
 
@@ -194,7 +303,11 @@ const Services = () => {
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
           />
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
           {/* Filter Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Category Filter */}
@@ -340,6 +453,7 @@ const Services = () => {
                         </h3>
                         {/* Availability Badge */}
                         {service.availability && (
+<<<<<<< HEAD
                           <span className={`ml-2 px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${service.availability === 'online'
                               ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
                               : service.availability === 'busy'
@@ -352,6 +466,22 @@ const Services = () => {
                                   ? 'bg-amber-500'
                                   : 'bg-slate-400'
                               }`}></span>
+=======
+                          <span className={`ml-2 px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${
+                            service.availability === 'online' 
+                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' 
+                              : service.availability === 'busy'
+                              ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                              : 'bg-slate-100 text-slate-700 dark:bg-neutral-700 dark:text-neutral-400'
+                          }`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${
+                              service.availability === 'online' 
+                                ? 'bg-emerald-500' 
+                                : service.availability === 'busy'
+                                ? 'bg-amber-500'
+                                : 'bg-slate-400'
+                            }`}></span>
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                             {service.availability.charAt(0).toUpperCase() + service.availability.slice(1)}
                           </span>
                         )}
@@ -376,7 +506,11 @@ const Services = () => {
                       )}
 
                       {/* Rating */}
+<<<<<<< HEAD
                       {((service.reviewCount || service.provider?.reviewCount || 0) > 0) ? (
+=======
+                      {(service.rating || service.provider?.rating) && (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                         <div className="flex items-center gap-2 mb-3">
                           <div className="flex items-center">
                             <svg className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
@@ -386,6 +520,7 @@ const Services = () => {
                               {service.rating || service.provider?.rating || '0.0'}
                             </span>
                           </div>
+<<<<<<< HEAD
                           <span className="text-xs text-slate-500 dark:text-neutral-400">
                             ({service.reviewCount || service.provider?.reviewCount || 0} reviews)
                           </span>
@@ -393,6 +528,13 @@ const Services = () => {
                       ) : (
                         <div className="mb-3">
                           <span className="text-xs text-slate-400 dark:text-neutral-500 italic">No reviews yet</span>
+=======
+                          {(service.reviewCount || service.provider?.reviewCount) && (
+                            <span className="text-xs text-slate-500 dark:text-neutral-400">
+                              ({service.reviewCount || service.provider?.reviewCount || 0} reviews)
+                            </span>
+                          )}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                         </div>
                       )}
 

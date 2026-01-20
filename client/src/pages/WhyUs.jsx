@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+<<<<<<< HEAD
 
 const reasons = [
   {
@@ -7,10 +8,56 @@ const reasons = [
     description:
       'All providers are background-checked, identity-verified, and rated by real customers.',
     icon: (
+=======
+import usePageContent from '../hooks/usePageContent';
+
+const WhyUs = () => {
+  const { data: pageContent } = usePageContent('why-us');
+
+  const stats =
+    pageContent?.stats || [
+      { label: 'Customer rating', value: '4.9/5', color: 'blue' },
+      { label: 'Jobs completed', value: '75k+', color: 'indigo' },
+      { label: 'Verified providers', value: '2,500+', color: 'sky' },
+      { label: 'Cities covered', value: '120+', color: 'emerald' },
+    ];
+
+  const baseReasons =
+    pageContent?.reasons || [
+      {
+        title: 'Verified professionals',
+        description:
+          'All providers are background-checked, identity-verified, and rated by real customers.',
+        color: 'blue',
+      },
+      {
+        title: 'Transparent pricing',
+        description:
+          "Clear, upfront pricing with no hidden fees. Know what you'll pay before you book.",
+        color: 'emerald',
+      },
+      {
+        title: 'Fast, reliable support',
+        description:
+          'Our support team is available to help with bookings, reschedules, and any issues.',
+        color: 'indigo',
+      },
+      {
+        title: 'Coverage for every need',
+        description:
+          'From plumbing to cleaning, AC repair to handyman tasks — find experts for every job.',
+        color: 'sky',
+      },
+    ];
+
+  const iconMap = {
+    blue: (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
     ),
+<<<<<<< HEAD
     color: 'blue',
   },
   {
@@ -18,10 +65,14 @@ const reasons = [
     description:
       'Clear, upfront pricing with no hidden fees. Know what you\'ll pay before you book.',
     icon: (
+=======
+    emerald: (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
+<<<<<<< HEAD
     color: 'emerald',
   },
   {
@@ -29,10 +80,14 @@ const reasons = [
     description:
       'Our support team is available to help with bookings, reschedules, and any issues.',
     icon: (
+=======
+    indigo: (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
       </svg>
     ),
+<<<<<<< HEAD
     color: 'indigo',
   },
   {
@@ -40,10 +95,14 @@ const reasons = [
     description:
       'From plumbing to cleaning, AC repair to handyman tasks — find experts for every job.',
     icon: (
+=======
+    sky: (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
       </svg>
     ),
+<<<<<<< HEAD
     color: 'sky',
   },
 ];
@@ -56,12 +115,28 @@ const stats = [
 ];
 
 const WhyUs = () => {
+=======
+  };
+
+  const reasons = baseReasons.map((reason) => ({
+    ...reason,
+    icon: iconMap[reason.color] || iconMap.blue,
+  }));
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   return (
     <div className="bg-slate-50 dark:bg-neutral-950 min-h-screen transition-colors duration-300">
       <section className="max-w-7xl mx-auto px-6 lg:px-8 pt-20 pb-24">
         <PageHeader
+<<<<<<< HEAD
           title="Why HelpKart"
           subtitle="Built to make home services simple, safe, and dependable — for customers and professionals alike."
+=======
+          title={pageContent?.title || 'Why HelpKart'}
+          subtitle={
+            pageContent?.subtitle ||
+            'Built to make home services simple, safe, and dependable — for customers and professionals alike.'
+          }
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         />
 
         {/* Stats strip */}
@@ -156,6 +231,7 @@ const WhyUs = () => {
         {/* Final message */}
         <div className="bg-gradient-to-br from-white to-blue-50/30 dark:from-neutral-800 dark:to-neutral-800/50 rounded-3xl shadow-md shadow-slate-200/80 dark:shadow-neutral-950/50 border border-blue-100/50 dark:border-neutral-700 px-8 py-7 max-w-3xl transition-all duration-300 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-900/60">
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-neutral-100 mb-2">
+<<<<<<< HEAD
             A better way to book local services.
           </h2>
           <p className="text-sm sm:text-base text-slate-500 dark:text-neutral-400 mb-6">
@@ -175,6 +251,26 @@ const WhyUs = () => {
               className="px-6 py-3 rounded-full bg-white dark:bg-neutral-800 text-slate-900 dark:text-neutral-100 text-sm font-semibold border border-slate-200 dark:border-neutral-700 shadow-sm hover:border-slate-300 dark:hover:border-neutral-600 hover:bg-slate-50 dark:hover:bg-neutral-700 transition-all duration-300"
             >
               Learn how it works
+=======
+            {pageContent?.finalSection?.heading || 'A better way to book local services.'}
+          </h2>
+          <p className="text-sm sm:text-base text-slate-500 dark:text-neutral-400 mb-6">
+            {pageContent?.finalSection?.description ||
+              'With HelpKart, you get the ease of online booking, the trust of verified professionals, and the peace of mind that every job is tracked from request to completion.'}
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Link
+              to={pageContent?.finalSection?.primaryCta?.link || '/services'}
+              className="px-6 py-3 rounded-full bg-blue-600 text-white text-sm font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-300"
+            >
+              {pageContent?.finalSection?.primaryCta?.label || 'Browse services'}
+            </Link>
+            <Link
+              to={pageContent?.finalSection?.secondaryCta?.link || '/how-it-works'}
+              className="px-6 py-3 rounded-full bg-white dark:bg-neutral-800 text-slate-900 dark:text-neutral-100 text-sm font-semibold border border-slate-200 dark:border-neutral-700 shadow-sm hover:border-slate-300 dark:hover:border-neutral-600 hover:bg-slate-50 dark:hover:bg-neutral-700 transition-all duration-300"
+            >
+              {pageContent?.finalSection?.secondaryCta?.label || 'Learn how it works'}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </Link>
           </div>
         </div>

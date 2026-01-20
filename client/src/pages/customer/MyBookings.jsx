@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { useState, useEffect, useCallback, useMemo } from 'react';
+=======
+import { useState, useEffect } from 'react';
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Card from '../../components/ui/Card';
@@ -7,7 +11,10 @@ import PaymentStatusBadge from '../../components/ui/PaymentStatusBadge';
 import ServiceStatusBadge from '../../components/ui/ServiceStatusBadge';
 import PrimaryButton from '../../components/ui/PrimaryButton';
 import BehaviorReportModal from '../../components/modals/BehaviorReportModal';
+<<<<<<< HEAD
 import ReviewModal from '../../components/modals/ReviewModal';
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 import { getApiUrl } from '../../config/api';
 import API_URL from '../../config/api';
 
@@ -27,7 +34,10 @@ const MyBookings = () => {
   const [reportingIssue, setReportingIssue] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [behaviorReportModal, setBehaviorReportModal] = useState(null); // { bookingId, booking }
+<<<<<<< HEAD
   const [reviewModal, setReviewModal] = useState(null); // { booking }
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   useEffect(() => {
     fetchBookings();
@@ -40,18 +50,35 @@ const MyBookings = () => {
     }
   }, []);
 
+<<<<<<< HEAD
   const fetchBookings = useCallback(async () => {
+=======
+  const fetchBookings = async () => {
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     try {
       setLoading(true);
       const response = await axios.get(getApiUrl('api/bookings/my'));
       const bookings = response.data.bookings || [];
+<<<<<<< HEAD
+=======
+      // Debug: Log booking data to see what we're getting
+      console.log('Bookings data:', bookings.map(b => ({
+        id: b._id,
+        status: b.status,
+        paymentStatus: b.paymentStatus
+      })));
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       setBookings(bookings);
     } catch (error) {
       console.error('Error fetching bookings:', error);
     } finally {
       setLoading(false);
     }
+<<<<<<< HEAD
   }, []);
+=======
+  };
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   const handlePaymentClick = (booking) => {
     setPaymentModal({ bookingId: booking._id, booking });
@@ -166,7 +193,11 @@ const MyBookings = () => {
   };
 
   // Check if issue reporting window is still open (7 days after completion)
+<<<<<<< HEAD
   const isIssueWindowOpen = useCallback((booking) => {
+=======
+  const isIssueWindowOpen = (booking) => {
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     if (booking.status === 'provider_completed') return true; // Always open if waiting for customer confirmation
 
     if (booking.status !== 'completed' || !booking.completedAt) {
@@ -181,17 +212,24 @@ const MyBookings = () => {
       ? new Date(booking.issueWindowExpiresAt)
       : new Date(completedAt.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
     return now <= issueWindowExpiresAt;
+<<<<<<< HEAD
   }, []);
+=======
+  };
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   const handleReportIssueClick = (booking) => {
     setIssueModal({ bookingId: booking._id, booking });
     setIssueData({ issueType: '', issueDescription: '', issueImages: [] });
   };
 
+<<<<<<< HEAD
   const handleGiveReviewClick = (booking) => {
     setReviewModal({ booking });
   };
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   const handleIssueImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -232,10 +270,14 @@ const MyBookings = () => {
     });
   };
 
+<<<<<<< HEAD
   const handleReportIssue = async (e) => {
     e?.preventDefault();
     e?.stopPropagation();
     
+=======
+  const handleReportIssue = async () => {
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     if (!issueModal) return;
 
     if (!issueData.issueType) {
@@ -590,6 +632,7 @@ const MyBookings = () => {
                           Report Provider Behavior
                         </button>
                       )}
+<<<<<<< HEAD
 
                     {/* Give Review Button: only when booking is completed and not yet reviewed */}
                     {booking.status === 'completed' && !booking.reviewed && (
@@ -600,6 +643,8 @@ const MyBookings = () => {
                         Give Review
                       </button>
                     )}
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                   </div>
                 </div>
               </Card>
@@ -621,6 +666,7 @@ const MyBookings = () => {
         />
       )}
 
+<<<<<<< HEAD
       {/* Review Modal */}
       {reviewModal && (
         <ReviewModal
@@ -633,6 +679,8 @@ const MyBookings = () => {
         />
       )}
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       {/* Reschedule Modal */}
       {rescheduleModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -912,6 +960,7 @@ const MyBookings = () => {
 
       {/* Issue Report Modal */}
       {issueModal && (
+<<<<<<< HEAD
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto"
           onClick={(e) => {
@@ -921,6 +970,9 @@ const MyBookings = () => {
             }
           }}
         >
+=======
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
           <Card className="max-w-2xl w-full my-8 dark:bg-neutral-800 dark:border-neutral-700">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
@@ -1088,6 +1140,7 @@ const MyBookings = () => {
                   Cancel
                 </button>
                 <PrimaryButton
+<<<<<<< HEAD
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -1096,6 +1149,11 @@ const MyBookings = () => {
                   disabled={reportingIssue || !issueData.issueType || !issueData.issueDescription || issueData.issueDescription.trim().length < 10}
                   className="flex-1"
                   type="button"
+=======
+                  onClick={handleReportIssue}
+                  disabled={reportingIssue || !issueData.issueType || !issueData.issueDescription || issueData.issueDescription.trim().length < 10}
+                  className="flex-1"
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                   icon={
                     reportingIssue ? (
                       <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">

@@ -1,11 +1,18 @@
+<<<<<<< HEAD
 import { useState, useEffect, useCallback } from 'react';
+=======
+import { useState, useEffect } from 'react';
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/ui/Card';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import LocationPicker from '../components/LocationPicker';
+<<<<<<< HEAD
 import DeleteConfirmModal from '../components/modals/DeleteConfirmModal';
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 import { getApiUrl } from '../config/api';
 import API_URL from '../config/api';
 
@@ -40,10 +47,13 @@ const ServiceDetails = () => {
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+<<<<<<< HEAD
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [deleteReviewModal, setDeleteReviewModal] = useState(null);
   const [deletingReview, setDeletingReview] = useState(false);
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   useEffect(() => {
     // Scroll to top instantly when component mounts or id changes
@@ -52,6 +62,7 @@ const ServiceDetails = () => {
     fetchService();
   }, [id]);
 
+<<<<<<< HEAD
   // Function to refetch reviews (can be called manually or on focus)
   const refetchReviews = useCallback(async () => {
     if (!id || id.startsWith('static-')) return;
@@ -91,6 +102,8 @@ const ServiceDetails = () => {
     };
   }, [id, refetchReviews]);
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   const fetchService = async () => {
     // Check if it's a static service
     if (id && id.startsWith('static-')) {
@@ -111,6 +124,7 @@ const ServiceDetails = () => {
     // Try to fetch from backend
     try {
       const response = await axios.get(getApiUrl(`api/services/${id}`));
+<<<<<<< HEAD
       const svc = response.data.service;
       setService(svc);
 
@@ -125,6 +139,9 @@ const ServiceDetails = () => {
       } finally {
         setReviewsLoading(false);
       }
+=======
+      setService(response.data.service);
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     } catch (error) {
       console.error('Error fetching service:', error);
     } finally {
@@ -179,6 +196,7 @@ const ServiceDetails = () => {
     );
   }
 
+<<<<<<< HEAD
   // Calculate rating from actual reviews array ONLY for service details
   // Don't use provider fallback to avoid confusion
   const rating = reviews.length > 0
@@ -207,6 +225,10 @@ const ServiceDetails = () => {
       setDeletingReview(false);
     }
   };
+=======
+  const rating = service.rating || service.provider?.rating || 0;
+  const reviewCount = service.reviewCount || service.provider?.totalReviews || 0;
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-neutral-950 transition-colors duration-300 pb-0">
@@ -235,7 +257,11 @@ const ServiceDetails = () => {
                       }}
                     />
                     {/* Rating Badge Overlay */}
+<<<<<<< HEAD
                     {shouldShowRating && (
+=======
+                    {rating > 0 && (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                       <div className="absolute top-4 right-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg border border-slate-200/50 dark:border-neutral-700/50">
                         <div className="flex items-center gap-2">
                           <svg className="w-5 h-5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
@@ -304,8 +330,12 @@ const ServiceDetails = () => {
                       </div>
                       <div className="flex-1">
                         <p className="text-base md:text-lg font-semibold text-slate-900 dark:text-neutral-100 mb-1">{service.provider.businessName}</p>
+<<<<<<< HEAD
                         {/* Only show provider rating if THIS service has reviews to avoid confusion */}
                         {reviewCount > 0 && service.provider.rating > 0 && service.provider.totalReviews > 0 && (
+=======
+                        {service.provider.rating > 0 && (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                           <div className="flex items-center gap-2">
                             <div className="flex items-center">
                               <svg className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
@@ -328,6 +358,7 @@ const ServiceDetails = () => {
                   </div>
                 )}
 
+<<<<<<< HEAD
                 {/* Reviews Section */}
                 <div className="bg-white dark:bg-neutral-800 rounded-xl p-5 md:p-6 lg:p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
                   <div className="flex items-center justify-between mb-3 lg:mb-4">
@@ -411,6 +442,8 @@ const ServiceDetails = () => {
                   )}
                 </div>
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                 {/* Location with Map */}
                 {service.location && (
                   <div className="bg-white dark:bg-neutral-800 rounded-xl p-5 md:p-6 lg:p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
@@ -423,7 +456,11 @@ const ServiceDetails = () => {
                 )}
 
                 {/* Spacer for sticky bottom button */}
+<<<<<<< HEAD
                 <div className="h-6 md:h-8" />
+=======
+                <div className="h-20" />
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
               </div>
             </div>
           </div>
@@ -431,6 +468,7 @@ const ServiceDetails = () => {
 
         {/* Desktop/Tablet: Sticky Button (footer-aware) */}
         <div className="hidden md:block">
+<<<<<<< HEAD
           <div className="sticky bottom-0 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md border-t-2 border-slate-200 dark:border-neutral-700 shadow-2xl z-40 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 md:py-4">
             <div className="max-w-7xl mx-auto flex justify-center">
               <div className="w-full max-w-md">
@@ -442,6 +480,22 @@ const ServiceDetails = () => {
                 >
                   Book This Service
                 </PrimaryButton>
+=======
+          <div className="sticky bottom-0 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-neutral-700 shadow-lg z-40 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-2 md:py-2 lg:py-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex md:gap-4 lg:gap-8">
+                <div className="md:w-[50%] lg:w-[40%] flex-shrink-0" />
+                <div className="md:w-[50%] lg:w-[60%] flex-shrink-0">
+                  <PrimaryButton 
+                    onClick={handleBook} 
+                    className="w-full text-base md:text-lg lg:text-lg py-2.5 md:py-3.5 lg:py-4 h-10 md:h-14 lg:h-12" 
+                    icon="→" 
+                    iconPosition="right"
+                  >
+                    Book This Service
+                  </PrimaryButton>
+                </div>
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
               </div>
             </div>
           </div>
@@ -462,7 +516,11 @@ const ServiceDetails = () => {
                   }}
                 />
                 {/* Rating Badge Overlay */}
+<<<<<<< HEAD
                 {shouldShowRating && (
+=======
+                {rating > 0 && (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                   <div className="absolute top-4 right-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg border border-slate-200/50 dark:border-neutral-700/50">
                     <div className="flex items-center gap-2">
                       <svg className="w-5 h-5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
@@ -525,8 +583,12 @@ const ServiceDetails = () => {
                   </div>
                   <div className="flex-1">
                     <p className="text-lg font-semibold text-slate-900 dark:text-neutral-100 mb-1">{service.provider.businessName}</p>
+<<<<<<< HEAD
                     {/* Only show provider rating if THIS service has reviews to avoid confusion */}
                     {reviewCount > 0 && service.provider.rating > 0 && service.provider.totalReviews > 0 && (
+=======
+                    {service.provider.rating > 0 && (
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                       <div className="flex items-center gap-2">
                         <div className="flex items-center">
                           <svg className="w-4 h-4 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
@@ -549,6 +611,7 @@ const ServiceDetails = () => {
               </div>
             )}
 
+<<<<<<< HEAD
             {/* Reviews Section */}
             <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
               <div className="flex items-center justify-between mb-4">
@@ -632,6 +695,8 @@ const ServiceDetails = () => {
               )}
             </div>
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             {/* Location with Map */}
             {service.location && (
               <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
@@ -642,6 +707,7 @@ const ServiceDetails = () => {
                 />
               </div>
             )}
+<<<<<<< HEAD
           </div>
 
           {/* Mobile: CTA Button */}
@@ -657,10 +723,24 @@ const ServiceDetails = () => {
                   Book This Service
                 </PrimaryButton>
               </div>
+=======
+
+            {/* Mobile: CTA Button */}
+            <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-neutral-700 mt-6">
+              <PrimaryButton 
+                onClick={handleBook} 
+                className="w-full text-lg py-4" 
+                icon="→" 
+                iconPosition="right"
+              >
+                Book This Service
+              </PrimaryButton>
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </div>
           </div>
         </div>
       </div>
+<<<<<<< HEAD
 
       {/* Delete Review Confirmation Modal */}
       <DeleteConfirmModal
@@ -671,6 +751,8 @@ const ServiceDetails = () => {
         message="Are you sure you want to delete this review?"
         isLoading={deletingReview}
       />
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     </div>
   );
 };

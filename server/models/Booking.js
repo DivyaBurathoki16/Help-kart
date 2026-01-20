@@ -180,11 +180,14 @@ const bookingSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+<<<<<<< HEAD
     // Review status
     reviewed: {
       type: Boolean,
       default: false,
     },
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   },
   {
     timestamps: true,

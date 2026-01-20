@@ -4,8 +4,11 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import LocationPicker from '../../components/LocationPicker';
 import { getApiUrl } from '../../config/api';
+<<<<<<< HEAD
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
 const CustomerProfile = () => {
   const navigate = useNavigate();
@@ -17,7 +20,10 @@ const CustomerProfile = () => {
     phone: '',
     location: null,
   });
+<<<<<<< HEAD
   const [phoneError, setPhoneError] = useState('');
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   useEffect(() => {
     fetchCustomerProfile();
@@ -30,7 +36,11 @@ const CustomerProfile = () => {
       const userData = response.data.user;
       setFormData({
         name: userData.name || '',
+<<<<<<< HEAD
         phone: userData.phone?.startsWith('+') ? userData.phone.substring(1) : (userData.phone || ''),
+=======
+        phone: userData.phone || '',
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         location: userData.location || null,
       });
     } catch (error) {
@@ -48,11 +58,14 @@ const CustomerProfile = () => {
     });
   };
 
+<<<<<<< HEAD
   const handlePhoneChange = (value) => {
     setFormData({ ...formData, phone: value });
     setPhoneError('');
   };
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   const handleLocationChange = (location) => {
     setFormData({
       ...formData,
@@ -62,6 +75,7 @@ const CustomerProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     setPhoneError('');
 
     // Validate phone number
@@ -75,12 +89,18 @@ const CustomerProfile = () => {
       return;
     }
 
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     setLoading(true);
 
     try {
       await axios.patch(getApiUrl('api/auth/profile'), {
         name: formData.name,
+<<<<<<< HEAD
         phone: '+' + formData.phone,
+=======
+        phone: formData.phone,
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         location: formData.location,
       });
       alert('Profile updated successfully!');
@@ -159,6 +179,7 @@ const CustomerProfile = () => {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
+<<<<<<< HEAD
                 Phone Number *
               </label>
               <PhoneInput
@@ -181,6 +202,19 @@ const CustomerProfile = () => {
               {phoneError && (
                 <p className="mt-2 text-sm text-rose-600 dark:text-rose-400">{phoneError}</p>
               )}
+=======
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                placeholder="+1 (555) 123-4567"
+              />
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </div>
 
             {/* Location */}

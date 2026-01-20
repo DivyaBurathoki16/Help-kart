@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { getApiUrl } from '../../config/api';
+<<<<<<< HEAD
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
 const ProviderProfile = () => {
   const navigate = useNavigate();
@@ -26,7 +29,10 @@ const ProviderProfile = () => {
     yearsOfExperience: 0,
     licenseNumber: '',
   });
+<<<<<<< HEAD
   const [phoneError, setPhoneError] = useState('');
+=======
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   useEffect(() => {
     fetchProviderProfile();
@@ -41,7 +47,11 @@ const ProviderProfile = () => {
       setFormData({
         businessName: providerData.businessName || '',
         description: providerData.description || '',
+<<<<<<< HEAD
         phone: providerData.phone?.startsWith('+') ? providerData.phone.substring(1) : (providerData.phone || ''),
+=======
+        phone: providerData.phone || '',
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         address: {
           street: providerData.address?.street || '',
           city: providerData.address?.city || '',
@@ -82,6 +92,7 @@ const ProviderProfile = () => {
     }
   };
 
+<<<<<<< HEAD
   const handlePhoneChange = (value) => {
     setFormData({ ...formData, phone: value });
     setPhoneError('');
@@ -117,6 +128,20 @@ const ProviderProfile = () => {
       } else {
         // Create new profile
         await axios.post(getApiUrl('api/provider/profile'), dataToSubmit);
+=======
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (provider) {
+        // Update existing profile
+        await axios.patch(getApiUrl('api/provider/profile'), formData);
+        alert('Profile updated successfully!');
+      } else {
+        // Create new profile
+        await axios.post(getApiUrl('api/provider/profile'), formData);
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
         alert('Profile created successfully!');
       }
       fetchProviderProfile();
@@ -173,8 +198,14 @@ const ProviderProfile = () => {
                 <p className="text-sm text-slate-600 dark:text-neutral-300">Status</p>
                 <p className="text-2xl font-bold">
                   <span
+<<<<<<< HEAD
                     className={`${provider.isApproved ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'
                       }`}
+=======
+                    className={`${
+                      provider.isApproved ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'
+                    }`}
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                   >
                     {provider.isApproved ? '✓ Approved' : '⏳ Pending'}
                   </span>
@@ -224,6 +255,7 @@ const ProviderProfile = () => {
               <label htmlFor="phone" className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
                 Phone Number *
               </label>
+<<<<<<< HEAD
               <PhoneInput
                 country={'us'}
                 value={formData.phone}
@@ -244,6 +276,18 @@ const ProviderProfile = () => {
               {phoneError && (
                 <p className="mt-2 text-sm text-rose-600 dark:text-rose-400">{phoneError}</p>
               )}
+=======
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-slate-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                placeholder="+1 (555) 123-4567"
+              />
+>>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </div>
 
             {/* Address */}
