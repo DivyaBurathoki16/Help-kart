@@ -2,15 +2,10 @@ import express from 'express';
 import Booking from '../models/Booking.js';
 import Service from '../models/Service.js';
 import Provider from '../models/Provider.js';
-<<<<<<< HEAD
 import User from '../models/User.js';
 import { protect, authorize } from '../middleware/auth.js';
 import { applyAutoTransitions, getEventStartDateTime } from '../utils/bookingHelpers.js';
 import { sendBookingStatusEmail, sendNewBookingNotificationToProvider } from '../utils/emailService.js';
-=======
-import { protect, authorize } from '../middleware/auth.js';
-import { applyAutoTransitions, getEventStartDateTime } from '../utils/bookingHelpers.js';
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
 const router = express.Router();
 
@@ -132,7 +127,6 @@ router.post('/', protect, authorize('customer'), async (req, res) => {
 
     const populatedBooking = await Booking.findById(booking._id)
       .populate('customer', 'name email phone')
-<<<<<<< HEAD
       .populate('provider', 'businessName phone user')
       .populate('service', 'title price duration');
 
@@ -156,11 +150,6 @@ router.post('/', protect, authorize('customer'), async (req, res) => {
       console.error('Error sending new booking email to provider:', notifyError);
     }
 
-=======
-      .populate('provider', 'businessName phone')
-      .populate('service', 'title price duration');
-
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     // Apply auto-transitions before returning
     await applyAutoTransitions(booking);
 
@@ -491,7 +480,6 @@ router.put('/:id/pay', protect, authorize('customer'), async (req, res) => {
         .populate('provider', 'businessName phone')
         .populate('customer', 'name email phone');
 
-<<<<<<< HEAD
       // Notify customer that booking is confirmed
       try {
         await sendBookingStatusEmail(populatedBooking, 'confirmed');
@@ -499,8 +487,6 @@ router.put('/:id/pay', protect, authorize('customer'), async (req, res) => {
         console.error('Error sending booking confirmed email (COD):', notifyError);
       }
 
-=======
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       return res.json({
         success: true,
         message: 'Booking confirmed. Pay after service completion.',
@@ -525,7 +511,6 @@ router.put('/:id/pay', protect, authorize('customer'), async (req, res) => {
         .populate('provider', 'businessName phone')
         .populate('customer', 'name email phone');
 
-<<<<<<< HEAD
       // Notify customer that booking is confirmed after payment
       try {
         await sendBookingStatusEmail(populatedBooking, 'confirmed');
@@ -533,8 +518,6 @@ router.put('/:id/pay', protect, authorize('customer'), async (req, res) => {
         console.error('Error sending booking confirmed email (online payment):', notifyError);
       }
 
-=======
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       return res.json({
         success: true,
         message: 'Payment successful. Service pending.',

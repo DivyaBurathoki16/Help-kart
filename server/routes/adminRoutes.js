@@ -1,19 +1,13 @@
 import express from 'express';
-<<<<<<< HEAD
 import Booking from '../models/Booking.js';
 import Contact from '../models/Contact.js';
 import Review from '../models/Review.js';
+import PageContent from '../models/PageContent.js';
+import Service from '../models/Service.js';
 import { protect, authorize } from '../middleware/auth.js';
 import { sendReplyToUser } from '../utils/emailService.js';
 import { handleReviewDeletionSideEffects } from '../utils/reviewHelpers.js';
-=======
 import mongoose from 'mongoose';
-import Booking from '../models/Booking.js';
-import Contact from '../models/Contact.js';
-import PageContent from '../models/PageContent.js';
-import { protect, authorize } from '../middleware/auth.js';
-import { sendReplyToUser } from '../utils/emailService.js';
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
 const router = express.Router();
 
@@ -182,7 +176,7 @@ router.post('/messages/:id/reply', protect, authorize('admin', 'super_admin'), a
     // Send reply email
     try {
       await sendReplyToUser(contact.email, subject, message);
-      
+
       // Mark message as read
       contact.isRead = true;
       await contact.save();
@@ -242,7 +236,7 @@ router.patch('/messages/:id/read', protect, authorize('admin', 'super_admin'), a
   try {
     const { isRead } = req.body;
     const contact = await Contact.findById(req.params.id);
-    
+
     if (!contact) {
       return res.status(404).json({
         success: false,
@@ -267,7 +261,6 @@ router.patch('/messages/:id/read', protect, authorize('admin', 'super_admin'), a
   }
 });
 
-<<<<<<< HEAD
 // @route   GET /api/admin/reviews
 // @desc    Get all reviews (ADMIN ONLY)
 // @access  Private/Admin
@@ -319,7 +312,144 @@ router.delete('/reviews/:id', protect, authorize('admin', 'super_admin'), async 
     res.status(500).json({
       success: false,
       message: error.message || 'Failed to delete review',
-=======
+    });
+  }
+});
+
+// @route   GET /api/admin/services
+// @desc    Get all services (active and inactive) (ADMIN ONLY)
+// @access  Private/Admin
+router.get('/services', protect, authorize('admin', 'super_admin'), async (req, res) => {
+  try {
+    const services = await Service.find()
+      .populate('provider', 'businessName phone email')
+      .populate('category', 'name')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      services,
+      count: services.length,
+    });
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to fetch services',
+    });
+  }
+});
+
+// @route   PATCH /api/admin/services/:id/toggle
+// @desc    Toggle service active status (ADMIN ONLY)
+// @access  Private/Admin
+router.patch('/services/:id/toggle', protect, authorize('admin', 'super_admin'), async (req, res) => {
+  try {
+    const service = await Service.findById(req.params.id);
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service not found',
+      });
+    }
+
+    // Toggle the active status
+    service.isActive = !service.isActive;
+    await service.save();
+
+    const populatedService = await Service.findById(service._id)
+      .populate('provider', 'businessName phone email')
+      .populate('category', 'name');
+
+    res.json({
+      success: true,
+      service: populatedService,
+      message: `Service ${service.isActive ? 'activated' : 'deactivated'} successfully`,
+    });
+  } catch (error) {
+    console.error('Error toggling service status:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to toggle service status',
+    });
+  }
+});
+
+// @route   PATCH /api/admin/services/:id/remove
+// @desc    Remove service (soft delete by admin) (ADMIN ONLY)
+// @access  Private/Admin
+router.patch('/services/:id/remove', protect, authorize('admin', 'super_admin'), async (req, res) => {
+  try {
+    const service = await Service.findById(req.params.id);
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service not found',
+      });
+    }
+
+    // Mark service as removed
+    service.isRemoved = true;
+    service.isActive = false; // Also deactivate when removed
+    await service.save();
+
+    const populatedService = await Service.findById(service._id)
+      .populate('provider', 'businessName phone email')
+      .populate('category', 'name');
+
+    res.json({
+      success: true,
+      service: populatedService,
+      message: 'Service removed successfully',
+    });
+  } catch (error) {
+    console.error('Error removing service:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to remove service',
+    });
+  }
+});
+
+// @route   PATCH /api/admin/services/:id/restore
+// @desc    Restore removed service (ADMIN ONLY)
+// @access  Private/Admin
+router.patch('/services/:id/restore', protect, authorize('admin', 'super_admin'), async (req, res) => {
+  try {
+    const service = await Service.findById(req.params.id);
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service not found',
+      });
+    }
+
+    // Restore service
+    service.isRemoved = false;
+    service.isActive = true; // Activate when restored
+    await service.save();
+
+    const populatedService = await Service.findById(service._id)
+      .populate('provider', 'businessName phone email')
+      .populate('category', 'name');
+
+    res.json({
+      success: true,
+      service: populatedService,
+      message: 'Service restored successfully',
+    });
+  } catch (error) {
+    console.error('Error restoring service:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to restore service',
+    });
+  }
+});
+
 // Page content management (Admin CMS)
 
 // @route   PUT /api/admin/pages/:slug
@@ -361,7 +491,6 @@ router.put('/pages/:slug', protect, authorize('admin', 'super_admin'), async (re
     res.status(500).json({
       success: false,
       message: error.message || 'Failed to update page content',
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     });
   }
 });

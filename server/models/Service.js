@@ -44,6 +44,10 @@ const serviceSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isRemoved: {
+      type: Boolean,
+      default: false,
+    },
     rating: {
       type: Number,
       default: 0,

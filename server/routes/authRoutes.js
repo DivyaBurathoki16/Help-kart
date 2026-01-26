@@ -112,7 +112,7 @@ router.post(
       // Admin login with fixed credentials
       if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
         let adminUser = await User.findOne({ email: process.env.ADMIN_EMAIL });
-        
+
         if (!adminUser) {
           // Create admin user if doesn't exist
           adminUser = await User.create({
@@ -268,7 +268,7 @@ router.post(
         user.otpAttempts = (user.otpAttempts || 0) + 1;
         await user.save();
         const remainingAttempts = 5 - user.otpAttempts;
-        
+
         // Check if this was the last attempt
         if (user.otpAttempts >= 5) {
           // Invalidate OTP after max attempts
@@ -283,7 +283,7 @@ router.post(
             errorCode: 'OTP_ATTEMPTS_EXCEEDED',
           });
         }
-        
+
         return res.status(400).json({
           success: false,
           message: `Invalid OTP. ${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} remaining.`,
@@ -444,7 +444,7 @@ router.post(
         user.resetOtpAttempts = (user.resetOtpAttempts || 0) + 1;
         await user.save();
         const remainingAttempts = 5 - user.resetOtpAttempts;
-        
+
         // Check if this was the last attempt
         if (user.resetOtpAttempts >= 5) {
           // Invalidate OTP after max attempts
@@ -459,7 +459,7 @@ router.post(
             errorCode: 'OTP_ATTEMPTS_EXCEEDED',
           });
         }
-        
+
         return res.status(400).json({
           success: false,
           message: `Invalid OTP. ${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} remaining.`,
@@ -500,7 +500,7 @@ router.get('/me', protect, async (req, res) => {
 // @access  Private
 router.patch('/profile', protect, async (req, res) => {
   try {
-    const { name, phone, location } = req.body;
+    const { name, phone, location, language, avatar } = req.body;
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -511,6 +511,13 @@ router.patch('/profile', protect, async (req, res) => {
     if (name !== undefined) user.name = name;
     if (phone !== undefined) user.phone = phone;
     if (location !== undefined) user.location = location;
+    if (avatar !== undefined) user.avatar = avatar;
+    if (language !== undefined) {
+      const validLanguages = ['en', 'hi', 'mr', 'ta', 'te', 'kn', 'ml', 'gu', 'bn', 'pa', 'or', 'as', 'ur'];
+      if (validLanguages.includes(language)) {
+        user.language = language;
+      }
+    }
 
     await user.save();
 
@@ -520,5 +527,41 @@ router.patch('/profile', protect, async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
+// @route   PATCH /api/auth/language
+// @desc    Update user language preference
+// @access  Private
+router.patch(
+  '/language',
+  protect,
+  [
+    body('language')
+      .isIn(['en', 'hi', 'mr', 'ta', 'te', 'kn', 'ml', 'gu', 'bn', 'pa', 'or', 'as', 'ur'])
+      .withMessage('Invalid language code'),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, errors: errors.array() });
+      }
+
+      const { language } = req.body;
+      const user = await User.findById(req.user._id);
+
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      user.language = language;
+      await user.save();
+
+      const updatedUser = await User.findById(req.user._id).select('-password');
+      res.json({ success: true, user: updatedUser, message: 'Language preference updated successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+);
 
 export default router;

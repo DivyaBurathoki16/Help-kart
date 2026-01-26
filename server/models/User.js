@@ -110,6 +110,11 @@ const userSchema = mongoose.Schema(
         trim: true,
       },
     },
+    language: {
+      type: String,
+      enum: ['en', 'hi', 'mr', 'ta', 'te', 'kn', 'ml', 'gu', 'bn', 'pa', 'or', 'as', 'ur'],
+      default: 'en',
+    },
   },
   {
     timestamps: true,
