@@ -2,6 +2,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { getApiUrl } from '../config/api';
+import ChatListModal from './ChatListModal';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -11,6 +14,9 @@ const Navbar = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [chatUnreadCount, setChatUnreadCount] = useState(0);
+  const [chatModalOpen, setChatModalOpen] = useState(false);
+  const [chatConversations, setChatConversations] = useState([]);
 
   // Handle scroll effect
   useEffect(() => {
@@ -26,6 +32,36 @@ const Navbar = () => {
     setUserMenuOpen(false);
     setMobileMenuOpen(false);
   }, [location.pathname]);
+
+  // Fetch chat unread count
+  useEffect(() => {
+    if (isAuthenticated && (user?.role === 'customer' || user?.role === 'provider')) {
+      fetchChatUnreadCount();
+      // Poll every 10 seconds for unread count
+      const interval = setInterval(fetchChatUnreadCount, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [isAuthenticated, user]);
+
+  const fetchChatUnreadCount = async () => {
+    try {
+      const response = await axios.get(getApiUrl('api/chat/conversations'), {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.data.success) {
+        const conversations = response.data.conversations || [];
+        const totalUnread = conversations.reduce((sum, conv) => sum + (conv.unreadCount || 0), 0);
+        setChatUnreadCount(totalUnread);
+        setChatConversations(conversations);
+      }
+    } catch (error) {
+      // Silently fail
+      console.error('Error fetching chat unread count:', error);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -65,6 +101,26 @@ const Navbar = () => {
 
             {/* Desktop Nav Items */}
             <div className="hidden md:flex items-center gap-2">
+              {/* Chat Button - Only for authenticated users */}
+              {isAuthenticated && (user?.role === 'customer' || user?.role === 'provider') && (
+                <div className="relative">
+                  <button
+                    onClick={() => setChatModalOpen(true)}
+                    className="p-2.5 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-slate-100 dark:text-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800 transition-all duration-200 relative"
+                    aria-label="Chat"
+                    type="button"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    {chatUnreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                        {chatUnreadCount > 9 ? '9+' : chatUnreadCount}
+                      </span>
+                    )}
+                  </button>
+                </div>
+              )}
               {/* Theme Toggle Button */}
               <button
                 onClick={(e) => {
@@ -122,7 +178,7 @@ const Navbar = () => {
                     <Link to="/admin/dashboard" className={navLinkClass('/admin/dashboard')}>Admin Dashboard</Link>
                   )}
 
-                  {/* User Menu */}
+                  {/* User Menu - Advanced Settings Only */}
                   <div className="relative ml-4">
                     <button
                       onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -132,23 +188,45 @@ const Navbar = () => {
                     </button>
 
                     {userMenuOpen && (
-                      <div className="absolute right-0 mt-3 w-64 card p-3 animate-fade-in-up shadow-2xl dark:bg-neutral-800 dark:border-neutral-700">
-                        <div className="px-4 py-3 border-b border-slate-100 dark:border-neutral-700 mb-2">
+                      <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-neutral-800 rounded-xl shadow-2xl border border-slate-200 dark:border-neutral-700 overflow-hidden z-50 animate-fade-in-up">
+                        {/* User Info Header */}
+                        <div className="px-4 py-3 border-b border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-900/50">
                           <p className="text-sm font-bold text-slate-900 dark:text-neutral-100 leading-none">{user.name}</p>
                           <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1 truncate">{user.email}</p>
                           <div className="mt-2 text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30 px-2 py-0.5 rounded-md inline-block">
                             {user.role}
                           </div>
                         </div>
-                        <button
-                          onClick={handleLogout}
-                          className="w-full px-4 py-2.5 text-left text-sm font-bold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-900/30 rounded-xl transition-all flex items-center gap-2 group"
-                        >
-                          <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                          </svg>
-                          Logout
-                        </button>
+
+                        {/* Profile Section */}
+                        <div className="py-2">
+                          <div className="px-4 py-2 text-xs font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider">
+                            Your Account
+                          </div>
+                          <Link
+                            to={user.role === 'customer' ? "/customer/profile" : "/provider/profile"}
+                            onClick={() => setUserMenuOpen(false)}
+                            className="w-full px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-50 dark:text-neutral-300 dark:hover:bg-neutral-700 transition-colors flex items-center gap-3"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Profile
+                          </Link>
+                        </div>
+
+                        {/* Logout */}
+                        <div className="border-t border-slate-200 dark:border-neutral-700">
+                          <button
+                            onClick={handleLogout}
+                            className="w-full px-4 py-2.5 text-left text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-900/30 transition-all flex items-center gap-3 group"
+                          >
+                            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Logout
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -188,23 +266,52 @@ const Navbar = () => {
                     <UserAvatar name={user.name} />
                   </button>
                   {userMenuOpen && (
-                    <div className="absolute right-0 mt-3 w-64 card p-3 animate-fade-in-up shadow-2xl z-50">
-                      <div className="px-4 py-3 border-b border-slate-100 mb-2">
-                        <p className="text-sm font-bold text-slate-900 leading-none">{user.name}</p>
-                        <p className="text-xs text-slate-500 mt-1 truncate">{user.email}</p>
-                        <div className="mt-2 text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md inline-block">
+                    <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-neutral-800 rounded-xl shadow-2xl border border-slate-200 dark:border-neutral-700 overflow-hidden z-50 animate-fade-in-up">
+                      {/* User Info Header */}
+                      <div className="px-4 py-3 border-b border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-900/50">
+                        <p className="text-sm font-bold text-slate-900 dark:text-neutral-100 leading-none">{user.name}</p>
+                        <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1 truncate">{user.email}</p>
+                        <div className="mt-2 text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30 px-2 py-0.5 rounded-md inline-block">
                           {user.role}
                         </div>
                       </div>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full px-4 py-2.5 text-left text-sm font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition-all flex items-center gap-2 group"
-                      >
-                        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        Logout
-                      </button>
+
+                      {/* Profile Section */}
+                      <div className="py-2">
+                        <div className="px-4 py-2 text-xs font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider">
+                          Your Account
+                        </div>
+                        <Link
+                          to={user.role === 'customer' ? "/customer/profile" : "/provider/profile"}
+                          onClick={() => {
+                            setUserMenuOpen(false);
+                            setMobileMenuOpen(false);
+                          }}
+                          className="w-full px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-50 dark:text-neutral-300 dark:hover:bg-neutral-700 transition-colors flex items-center gap-3"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          Profile
+                        </Link>
+                      </div>
+
+                      {/* Logout */}
+                      <div className="border-t border-slate-200 dark:border-neutral-700">
+                        <button
+                          onClick={() => {
+                            handleLogout();
+                            setUserMenuOpen(false);
+                            setMobileMenuOpen(false);
+                          }}
+                          className="w-full px-4 py-2.5 text-left text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-900/30 transition-all flex items-center gap-3 group"
+                        >
+                          <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          </svg>
+                          Logout
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -266,6 +373,27 @@ const Navbar = () => {
 
           {/* Menu Items */}
           <div className="px-6 py-6 space-y-2">
+            {/* Chat Button - Mobile - Only for authenticated users */}
+            {isAuthenticated && (user?.role === 'customer' || user?.role === 'provider') && (
+              <button
+                onClick={() => {
+                  setChatModalOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="group flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 dark:text-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800 transition-all duration-200 active:scale-[0.98] relative"
+                type="button"
+              >
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <span>Messages</span>
+                {chatUnreadCount > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                    {chatUnreadCount > 9 ? '9+' : chatUnreadCount}
+                  </span>
+                )}
+              </button>
+            )}
             {/* Theme Toggle in Mobile Menu */}
             <button
               onClick={(e) => {
@@ -424,20 +552,6 @@ const Navbar = () => {
                       <span>Near Me</span>
                     </Link>
                     <Link
-                      to="/customer/dashboard"
-                  className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
-                    location.pathname === '/customer/dashboard'
-                      ? 'bg-blue-50 text-blue-600 shadow-sm dark:bg-blue-900/30 dark:text-blue-400'
-                      : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 dark:text-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800'
-                  }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                      </svg>
-                      <span>Dashboard</span>
-                    </Link>
-                    <Link
                       to="/customer/bookings"
                   className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
                     location.pathname === '/customer/bookings'
@@ -455,20 +569,6 @@ const Navbar = () => {
                 )}
                 {user.role === 'provider' && (
                   <>
-                    <Link
-                      to="/provider/dashboard"
-                  className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
-                    location.pathname === '/provider/dashboard'
-                      ? 'bg-blue-50 text-blue-600 shadow-sm dark:bg-blue-900/30 dark:text-blue-400'
-                      : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 dark:text-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800'
-                  }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                      </svg>
-                      <span>Dashboard</span>
-                    </Link>
                     <Link
                       to="/provider/services"
                   className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
@@ -496,20 +596,6 @@ const Navbar = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
                       <span>Bookings</span>
-                    </Link>
-                    <Link
-                      to="/provider/profile"
-                  className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold transition-all duration-200 active:scale-[0.98] ${
-                    location.pathname === '/provider/profile'
-                      ? 'bg-blue-50 text-blue-600 shadow-sm dark:bg-blue-900/30 dark:text-blue-400'
-                      : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/50 dark:text-neutral-300 dark:hover:text-blue-400 dark:hover:bg-neutral-800'
-                  }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      <span>Profile</span>
                     </Link>
                   </>
                 )}
@@ -551,6 +637,17 @@ const Navbar = () => {
 
       {/* Spacer to prevent content jump since navbar is fixed */}
       <div className="h-0 md:h-2" />
+
+      {/* Chat List Modal */}
+      {isAuthenticated && (user?.role === 'customer' || user?.role === 'provider') && (
+        <ChatListModal
+          isOpen={chatModalOpen}
+          onClose={() => {
+            setChatModalOpen(false);
+            fetchChatUnreadCount(); // Refresh unread count when closing
+          }}
+        />
+      )}
     </nav>
   );
 };
