@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-<<<<<<< HEAD
 import DeleteConfirmModal from '../../components/modals/DeleteConfirmModal';
-=======
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 import { getApiUrl } from '../../config/api';
 import API_URL from '../../config/api';
 
@@ -12,11 +9,8 @@ const MyServices = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-<<<<<<< HEAD
   const [deleteServiceModal, setDeleteServiceModal] = useState(null);
   const [deletingService, setDeletingService] = useState(false);
-=======
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
   useEffect(() => {
     fetchServices();
@@ -34,7 +28,6 @@ const MyServices = () => {
     }
   };
 
-<<<<<<< HEAD
   const handleDeleteClick = (service) => {
     setDeleteServiceModal(service);
   };
@@ -51,18 +44,6 @@ const MyServices = () => {
       alert(error.response?.data?.message || 'Failed to delete service');
     } finally {
       setDeletingService(false);
-=======
-  const handleDelete = async (serviceId) => {
-    if (!window.confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
-      return;
-    }
-
-    try {
-      await axios.delete(getApiUrl(`api/provider/services/${serviceId}`));
-      fetchServices(); // Refresh the list
-    } catch (error) {
-      alert(error.response?.data?.message || 'Failed to delete service');
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     }
   };
 
@@ -204,11 +185,7 @@ const MyServices = () => {
                       Edit
                     </Link>
                     <button
-<<<<<<< HEAD
                       onClick={() => handleDeleteClick(service)}
-=======
-                      onClick={() => handleDelete(service._id)}
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
                       className="flex-1 px-3 py-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
                     >
                       Delete
@@ -220,7 +197,6 @@ const MyServices = () => {
           </div>
         )}
       </div>
-<<<<<<< HEAD
 
       {/* Delete Service Confirmation Modal */}
       <DeleteConfirmModal
@@ -232,8 +208,6 @@ const MyServices = () => {
         itemName={deleteServiceModal?.title}
         isLoading={deletingService}
       />
-=======
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     </div>
   );
 };

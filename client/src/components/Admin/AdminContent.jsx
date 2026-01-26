@@ -3,11 +3,9 @@ import axios from 'axios';
 import Card from '../ui/Card';
 import PrimaryButton from '../ui/PrimaryButton';
 import { getApiUrl } from '../../config/api';
-import StaticServicesForm from './forms/StaticServicesForm';
 
 const PAGES = [
   { slug: 'home', label: 'Home / Landing' },
-  { slug: 'static-services', label: 'Static Services' },
   { slug: 'how-it-works', label: 'How It Works' },
   { slug: 'why-us', label: 'Why Us' },
   { slug: 'reviews', label: 'Reviews' },
@@ -596,16 +594,6 @@ const AdminContent = () => {
   };
 
 
-  const renderStaticServicesForm = () => {
-    return (
-      <StaticServicesForm
-        formData={formData}
-        updateArrayField={updateArrayField}
-        addArrayItem={addArrayItem}
-        removeArrayItem={removeArrayItem}
-      />
-    );
-  };
 
   const renderHowItWorksForm = () => {
     const customerSteps = formData.customerSteps || [];
@@ -1267,8 +1255,6 @@ const AdminContent = () => {
     switch (activePage) {
       case 'home':
         return renderHomeForm();
-      case 'static-services':
-        return renderStaticServicesForm();
       case 'how-it-works':
         return renderHowItWorksForm();
       case 'why-us':
@@ -1287,47 +1273,76 @@ const AdminContent = () => {
         <div className="fixed top-4 right-4 z-50 animate-slide-in">
           <div
             className={`${
-              notification.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'
+              notification.type === 'success' 
+                ? 'bg-gradient-to-r from-emerald-500 to-green-500' 
+                : 'bg-gradient-to-r from-rose-500 to-red-500'
             } text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 min-w-[260px]`}
           >
+            {notification.type === 'success' ? (
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            )}
             <span className="font-semibold text-sm">{notification.message}</span>
           </div>
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-200 dark:border-neutral-800">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-neutral-100">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
             Site Content Manager
           </h2>
-          <p className="text-sm text-slate-600 dark:text-neutral-400 mt-1">
-            Edit copy and static sections for your marketing pages without redeploying.
+          <p className="text-sm text-slate-500 dark:text-neutral-400 mt-1">
+            Edit marketing pages without redeploying
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button
             onClick={() => fetchPageContent(activePage)}
             disabled={loading || saving}
-            className="px-4 py-2.5 border border-slate-300 dark:border-neutral-700 rounded-xl text-slate-700 dark:text-neutral-300 font-semibold hover:bg-slate-50 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors text-sm"
+            className="px-4 py-2 text-sm border border-slate-200 dark:border-neutral-700 rounded-xl text-slate-600 dark:text-neutral-400 font-medium hover:bg-slate-50 dark:hover:bg-neutral-800 disabled:opacity-50 transition-all"
           >
+            <svg className="w-4 h-4 inline mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
             Reload
           </button>
-          <PrimaryButton onClick={handleSave} disabled={saving || loading} className="px-6 py-2.5">
-            {saving ? 'Saving...' : 'Save Changes'}
+          <PrimaryButton onClick={handleSave} disabled={saving || loading} size="sm">
+            {saving ? (
+              <>
+                <svg className="animate-spin h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Saving...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Save Changes
+              </>
+            )}
           </PrimaryButton>
         </div>
       </div>
 
       {/* Page selector pills */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 p-1 bg-slate-100/80 dark:bg-neutral-800/80 rounded-xl w-fit">
         {PAGES.map((page) => (
           <button
             key={page.slug}
             onClick={() => setActivePage(page.slug)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
               activePage === page.slug
-                ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                : 'bg-white dark:bg-neutral-900 text-slate-700 dark:text-neutral-200 border-slate-200 dark:border-neutral-700 hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400'
+                ? 'bg-white dark:bg-neutral-900 text-teal-600 dark:text-teal-400 shadow-sm'
+                : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-neutral-200'
             }`}
           >
             {page.label}
@@ -1336,32 +1351,32 @@ const AdminContent = () => {
       </div>
 
       {error && (
-        <Card className="p-4 border-2 border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20">
+        <div className="p-4 border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/5 rounded-xl">
           <div className="flex items-start gap-3">
-            <svg className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <div className="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+              <svg className="w-4 h-4 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
             <div className="flex-1">
-              <h4 className="font-semibold text-red-800 dark:text-red-300 mb-1">Error Loading Content</h4>
-              <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+              <h4 className="font-semibold text-rose-900 dark:text-rose-200 text-sm">Error Loading Content</h4>
+              <p className="text-sm text-rose-700 dark:text-rose-300 mt-1">{error}</p>
               <button
                 onClick={() => fetchPageContent(activePage)}
-                className="mt-3 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition-colors"
+                className="mt-3 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold transition-colors"
               >
                 Retry
               </button>
             </div>
           </div>
-        </Card>
+        </div>
       )}
 
       {loading ? (
-        <Card className="p-12">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
-            <p className="mt-4 text-slate-600 dark:text-neutral-400">Loading content...</p>
-          </div>
-        </Card>
+        <div className="p-16 text-center">
+          <div className="w-10 h-10 rounded-full border-4 border-slate-200 dark:border-neutral-700 border-t-teal-500 animate-spin mx-auto"></div>
+          <p className="mt-4 text-sm text-slate-500 dark:text-neutral-400">Loading content...</p>
+        </div>
       ) : (
         renderForm()
       )}

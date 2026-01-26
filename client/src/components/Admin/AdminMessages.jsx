@@ -203,22 +203,22 @@ const AdminMessages = () => {
       )}
 
       {/* Header Section */}
-      <div className="mb-6">
+      <div className="mb-6 pb-6 border-b border-slate-200 dark:border-neutral-800">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-neutral-100">Contact Messages</h2>
-            <p className="text-slate-600 dark:text-neutral-400 mt-1">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Contact Messages</h2>
+            <p className="text-sm text-slate-500 dark:text-neutral-400 mt-1">
               Manage and reply to customer inquiries
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {unreadCount > 0 && (
-              <div className="px-3 py-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full text-sm font-semibold flex items-center gap-2">
-                <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-pulse"></span>
+              <div className="px-2.5 py-1 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-blue-200 dark:border-blue-500/30">
+                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
                 {unreadCount} unread
               </div>
             )}
-            <PrimaryButton onClick={fetchMessages} variant="outline" className="whitespace-nowrap">
+            <PrimaryButton onClick={fetchMessages} variant="ghost" size="sm">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -240,25 +240,25 @@ const AdminMessages = () => {
         {/* Search and Filter Bar */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-neutral-500">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-neutral-500">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </span>
             <input
               type="text"
-              placeholder="Search messages by name, email, or subject..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-slate-900 dark:text-neutral-100 placeholder-slate-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              placeholder="Search messages..."
+              className="w-full pl-11 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-800 text-slate-900 dark:text-neutral-100 placeholder-slate-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <select
-            className="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            className="px-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-800 text-slate-700 dark:text-neutral-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all min-w-[160px]"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
-            <option value="all">All Messages ({messages.length})</option>
+            <option value="all">All ({messages.length})</option>
             <option value="unread">Unread ({unreadCount})</option>
             <option value="read">Read ({readCount})</option>
           </select>

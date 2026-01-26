@@ -264,7 +264,7 @@ const Booking = () => {
           onClick={() => navigate(-1)}
           className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-8 font-medium flex items-center gap-2 group transition-all duration-300"
         >
-          <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to Service
+          <span className="group-hover:-translate-x-1 transition-transform">←</span> Back
         </button>
 
         <Card className="p-6 mb-8">

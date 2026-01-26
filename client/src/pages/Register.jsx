@@ -1,25 +1,12 @@
-<<<<<<< HEAD
-import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import PasswordInput from '../components/ui/PasswordInput';
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
-=======
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PasswordInput from '../components/ui/PasswordInput';
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
+import PhoneInput from '../components/ui/PhoneInput';
 
 const Register = () => {
   const [searchParams] = useSearchParams();
   const roleFromUrl = searchParams.get('role');
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -29,13 +16,8 @@ const Register = () => {
     phone: '',
   });
   const [error, setError] = useState('');
-<<<<<<< HEAD
-  const [phoneError, setPhoneError] = useState('');
   const [loading, setLoading] = useState(false);
-
-=======
-  const [loading, setLoading] = useState(false);
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -43,33 +25,9 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-<<<<<<< HEAD
-  const handlePhoneChange = (value, country, e, formattedValue) => {
-    setFormData({ ...formData, phone: value });
-    setPhoneError('');
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setPhoneError('');
-
-    // Validate phone number
-    if (!formData.phone) {
-      setPhoneError('Phone number is required');
-      return;
-    }
-
-    // Basic validation - check if phone number has at least country code + some digits
-    if (formData.phone.length < 10) { // A typical minimum length for a valid international number
-      setPhoneError('Please enter a valid phone number');
-      return;
-    }
-=======
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
@@ -81,16 +39,14 @@ const Register = () => {
       return;
     }
 
+    if (formData.phone && !isPhoneValid) {
+      setError('Please enter a valid phone number for your country');
+      return;
+    }
+
     setLoading(true);
     const { confirmPassword, ...registerData } = formData;
-<<<<<<< HEAD
-    // Phone number already includes country code from react-phone-input-2
-    const dataToSubmit = { ...registerData, phone: '+' + formData.phone };
-
-    const result = await register(dataToSubmit);
-=======
     const result = await register(registerData);
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     setLoading(false);
 
     if (result.success) {
@@ -110,11 +66,7 @@ const Register = () => {
       <div className="max-w-md w-full">
         <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-lg dark:shadow-neutral-950/50 p-8">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-neutral-100 mb-6">Create your account</h2>
-<<<<<<< HEAD
 
-=======
-          
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 px-4 py-3 rounded-lg">
@@ -157,44 +109,12 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-slate-700 dark:text-neutral-300 mb-2">
-<<<<<<< HEAD
-                Phone Number *
-              </label>
               <PhoneInput
-                country={'us'}
                 value={formData.phone}
-                onChange={handlePhoneChange}
-                enableSearch={true}
-                searchPlaceholder="Search country"
-                containerClass="phone-input-container"
-                inputClass={`phone-input ${phoneError ? 'phone-input-error' : ''}`}
-                buttonClass="phone-dropdown-button"
-                dropdownClass="phone-dropdown"
-                searchClass="phone-search"
-                inputProps={{
-                  name: 'phone',
-                  required: true,
-                  autoFocus: false
-                }}
-              />
-              {phoneError && (
-                <p className="mt-2 text-sm text-rose-600 dark:text-rose-400">{phoneError}</p>
-              )}
-=======
-                Phone (Optional)
-              </label>
-              <input
-                id="phone"
+                onChange={(value) => setFormData({ ...formData, phone: value })}
                 name="phone"
-                type="tel"
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 text-slate-900 dark:text-neutral-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-text"
-                placeholder="Your phone number"
-                value={formData.phone}
-                onChange={handleChange}
-                style={{ caretColor: '#3b82f6' }}
+                setIsValid={setIsPhoneValid}
               />
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             </div>
 
             <div>
@@ -244,18 +164,10 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-<<<<<<< HEAD
               className={`w-full px-8 py-4 rounded-xl text-lg font-bold transition-all shadow-lg shadow-blue-500/30 ${loading
                 ? 'bg-blue-400 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700 text-white'
                 }`}
-=======
-              className={`w-full px-8 py-4 rounded-xl text-lg font-bold transition-all shadow-lg shadow-blue-500/30 ${
-                loading
-                  ? 'bg-blue-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
-              }`}
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

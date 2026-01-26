@@ -1,8 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-<<<<<<< HEAD
 import { createPortal } from 'react-dom';
-=======
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -22,7 +19,6 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
   const [state, setState] = useState(initialLocation?.state || '');
   const [zipCode, setZipCode] = useState(initialLocation?.zipCode || '');
   const [country, setCountry] = useState(initialLocation?.country || '');
-<<<<<<< HEAD
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [geocodeError, setGeocodeError] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -204,30 +200,12 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
     }
   };
 
-=======
-
-  useEffect(() => {
-    if (initialLocation) {
-      setPosition([initialLocation.latitude, initialLocation.longitude]);
-      setAddress(initialLocation.address || '');
-      setCity(initialLocation.city || '');
-      setState(initialLocation.state || '');
-      setZipCode(initialLocation.zipCode || '');
-      setCountry(initialLocation.country || '');
-    }
-  }, [initialLocation]);
-
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
   // Reverse geocoding function (using Nominatim)
   const reverseGeocode = async (lat, lng) => {
     try {
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
       const data = await response.json();
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       if (data.address) {
         const addr = data.address;
         setAddress(addr.road || addr.house_number ? `${addr.house_number || ''} ${addr.road || ''}`.trim() : '');
@@ -235,15 +213,9 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
         setState(addr.state || '');
         setZipCode(addr.postcode || '');
         setCountry(addr.country || '');
-<<<<<<< HEAD
 
         // Notify parent component
         const newLocation = {
-=======
-        
-        // Notify parent component
-        onLocationChange({
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
           latitude: lat,
           longitude: lng,
           address: addr.road || addr.house_number ? `${addr.house_number || ''} ${addr.road || ''}`.trim() : '',
@@ -251,14 +223,10 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
           state: addr.state || '',
           zipCode: addr.postcode || '',
           country: addr.country || '',
-<<<<<<< HEAD
         };
 
         lastReportedRef.current = newLocation;
         onLocationChange(newLocation);
-=======
-        });
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       }
     } catch (error) {
       console.error('Reverse geocoding error:', error);
@@ -289,11 +257,7 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
 
       // Enable interactions on mouse enter
       map.on('mouseenter', handleMouseEnter);
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       // For readOnly maps, disable on mouse leave
       if (readOnly) {
         map.on('mouseout', handleMouseLeave);
@@ -325,21 +289,17 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
   };
 
   const handleAddressChange = (field, value) => {
-<<<<<<< HEAD
     // Mark as local change with timestamp to "lock" state sync
     lastLocalChangeRef.current = Date.now();
     isTypingRef.current = true;
 
     // Update the appropriate field
-=======
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
     if (field === 'address') setAddress(value);
     if (field === 'city') setCity(value);
     if (field === 'state') setState(value);
     if (field === 'zipCode') setZipCode(value);
     if (field === 'country') setCountry(value);
 
-<<<<<<< HEAD
     // Clear existing debounce timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -366,10 +326,6 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
 
     // Build the current location report
     const currentReport = {
-=======
-    // Notify parent component
-    onLocationChange({
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
       latitude: position[0],
       longitude: position[1],
       address: field === 'address' ? value : address,
@@ -377,7 +333,6 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
       state: field === 'state' ? value : state,
       zipCode: field === 'zipCode' ? value : zipCode,
       country: field === 'country' ? value : country,
-<<<<<<< HEAD
     };
 
     // Cache this as the last reported location to prevent the circular update loop
@@ -514,47 +469,6 @@ const LocationPicker = ({ onLocationChange, initialLocation = null, readOnly = f
         {!readOnly && (
           <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
             💡 Type your address below - the map will automatically update! You can also click on the map to set a precise location.
-=======
-    });
-  };
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-neutral-300 mb-2">
-          {readOnly ? 'Location' : 'Location'} {!readOnly && '*'}
-        </label>
-        <div className="relative border border-slate-300 dark:border-neutral-700 rounded-lg overflow-hidden h-[400px] md:min-h-[300px] lg:h-[400px]">
-          <MapContainer
-            center={position}
-            zoom={13}
-            style={{ height: '100%', width: '100%' }}
-            scrollWheelZoom={false}
-            dragging={false}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={position} />
-            <MapInteractionHandler />
-            {!readOnly && <MapClickHandler />}
-          </MapContainer>
-          {readOnly && (
-            <div className="absolute top-2 left-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-md text-xs text-slate-700 dark:text-neutral-300 z-[1000] pointer-events-none">
-              Hover over map to interact
-            </div>
-          )}
-          {!readOnly && (
-            <div className="absolute top-2 left-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-md text-xs text-slate-700 dark:text-neutral-300 z-[1000] pointer-events-none">
-              Hover over map to scroll and zoom, click to set location
-            </div>
-          )}
-        </div>
-        {!readOnly && (
-          <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
-            Hover over the map to scroll and zoom. Click on the map to set your location.
->>>>>>> ee5694c89638ac804a1e46c27de9bc857dfb54d0
           </p>
         )}
       </div>
